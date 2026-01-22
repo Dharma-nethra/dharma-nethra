@@ -1124,7 +1124,14 @@ let speechInstance = null;
 
 function toggleSpeech(articleId) {
     const btn = document.getElementById(`btn-audio-${articleId}`);
-    
+    const contentDiv = document.getElementById(`c-${articleId}`);
+
+    // හඳුනාගැනීමේ දෝෂයක් ඇත්දැයි පරීක්ෂා කිරීම
+    if (!btn || !contentDiv) {
+        console.error("Content or Button not found");
+        return;
+    }
+
     // දැනට ශබ්දය ඇසෙනවා නම් එය නතර කරන්න
     if (window.speechSynthesis.speaking) {
         window.speechSynthesis.cancel();
@@ -1132,20 +1139,25 @@ function toggleSpeech(articleId) {
         return;
     }
 
-    // ලිපියේ අන්තර්ගතය පමණක් (c-id කොටසින්) ලබා ගැනීම
-    const contentDiv = document.getElementById(`c-${articleId}`);
     const textToRead = contentDiv.innerText;
-
-    speechInstance = new SpeechSynthesisUtterance(textToRead);
-    speechInstance.lang = 'si-LK'; // සිංහල භාෂාව
-    speechInstance.rate = 0.85;    // සන්සුන් වේගය
+    const utterance = new SpeechSynthesisUtterance(textToRead);
+    
+    // සිංහල භාෂාව තේරීම
+    utterance.lang = 'si-LK'; 
+    utterance.rate = 0.85; // වේගය සන්සුන් කිරීම
 
     // කියවා අවසන් වූ පසු බොත්තම යථා තත්ත්වයට පත් කිරීම
-    speechInstance.onend = () => {
+    utterance.onend = function() {
         btn.innerText = "🔊";
     };
 
-    window.speechSynthesis.speak(speechInstance);
+    // දෝෂයක් සිදු වුවහොත් පරීක්ෂා කිරීම
+    utterance.onerror = function(event) {
+        console.error("SpeechSynthesis error", event);
+        btn.innerText = "🔊";
+    };
+
+    window.speechSynthesis.speak(utterance);
     btn.innerText = "⏹️";
 }
   </script>

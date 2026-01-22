@@ -782,6 +782,8 @@
     }
     // --- පිටු සංචාලන පද්ධතිය ---
     function showPage(id) {
+markAsRead(id); // ලිපිය කියවූ බව සටහන් කරයි
+    renderList(sortedArticles, 'home-cards'); // ලැයිස්තුව යාවත්කාලීන කරයි
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       const target = document.getElementById(id);
       if (target) target.classList.add('active');
@@ -891,18 +893,22 @@
     }
     // --- මුල් පිටුවේ ලිපි ලැයිස්තුව ---
     function renderList(list, containerId) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = list.length ? "" : "<p style='text-align:center; padding:30px; color:#999;'>ලිපි හමු නොවීය.</p>";
-      list.forEach(a => {
+    const container = document.getElementById(containerId);
+    container.innerHTML = list.length ? "" : "<p style='text-align:center; padding: 30px; color:#999;'>ලිපි හමු නොවීය.</p>";
+
+    list.forEach(a => {
         const isFav = favorites.includes(a.id);
+        // ලිපිය කියවා ඇත්නම් "කියවන ලදී" ලේබලය මෙහිදී පරීක්ෂා කරයි
+        const readStatus = isArticleRead(a.id) ? '<span class="read-tag">✓ කියවන ලදී</span>' : '';
+        
         container.innerHTML += `
-                    <div class="article-card" onclick="showPage('${a.id}')">
-                        <div class="card-title">◈ ${a.title}</div>
-                        <div style="font-size:13px; color:#777; margin-top:5px; line-height:1.5;">${a.snippet}</div>
-                        <button class="fav-btn ${isFav ? 'fav-active' : ''}" onclick="event.stopPropagation(); toggleFavorite('${a.id}')">${isFav ? '❤️' : '🤍'}</button>
-                    </div>`;
-      });
-    }
+            <div class="article-card" onclick="showPage('${a.id}')">
+                <div class="card-title">◈ ${a.title} ${readStatus}</div>
+                <div style="font-size:13px; color:#777; margin-top:5px; line-height:1.5;">${a.snippet}</div>
+                <button class="fav-btn ${isFav ? 'fav-active' : ''}" onclick="event.stopPropagation(); toggleFavorite('${a.id}')">${isFav ? '❤️' : '🤍'}</button>
+            </div>`;
+    });
+}
 
     function filterArticles() {
       const q = document.getElementById('searchInput').value.toLowerCase();

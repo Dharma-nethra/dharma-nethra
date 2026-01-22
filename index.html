@@ -103,6 +103,11 @@
       transition: 0.3s;
       -webkit-tap-highlight-color: transparent;
     }
+/* ශ්‍රවණ බොත්තමේ Premium පෙනුම */
+.audio-active {
+    background: rgba(255, 215, 0, 0.2) !important;
+    border: 1px solid #FFD700 !important;
+}
 
     /* Fixed Bottom Nav */
     .bottom-nav {
@@ -999,6 +1004,7 @@ markAsRead(id); // ලිපිය කියවූ බව සටහන් කර
       container.innerHTML += `
                 <div id="${a.id}" class="page">
                     <div class="tool-bar">
+<button class="tool-btn" id="btn-audio-${a.id}" onclick="toggleSpeech('${a.id}')" title="ශ්‍රවණය කරන්න">🔊</button>
                         <button class="tool-btn" onclick="adjFont(-1.5)">A-</button>
                         <button class="tool-btn" onclick="adjFont(1.5)">A+</button>
                     </div>
@@ -1114,6 +1120,34 @@ document.addEventListener('contextmenu', function(e) {
 document.addEventListener('selectstart', function(e) {
     e.preventDefault();
 });
+let speechInstance = null;
+
+function toggleSpeech(articleId) {
+    const btn = document.getElementById(`btn-audio-${articleId}`);
+    
+    // දැනට ශබ්දය ඇසෙනවා නම් එය නතර කරන්න
+    if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+        btn.innerText = "🔊";
+        return;
+    }
+
+    // ලිපියේ අන්තර්ගතය පමණක් (c-id කොටසින්) ලබා ගැනීම
+    const contentDiv = document.getElementById(`c-${articleId}`);
+    const textToRead = contentDiv.innerText;
+
+    speechInstance = new SpeechSynthesisUtterance(textToRead);
+    speechInstance.lang = 'si-LK'; // සිංහල භාෂාව
+    speechInstance.rate = 0.85;    // සන්සුන් වේගය
+
+    // කියවා අවසන් වූ පසු බොත්තම යථා තත්ත්වයට පත් කිරීම
+    speechInstance.onend = () => {
+        btn.innerText = "🔊";
+    };
+
+    window.speechSynthesis.speak(speechInstance);
+    btn.innerText = "⏹️";
+}
   </script>
 </body>
 

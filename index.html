@@ -61,34 +61,31 @@
 }
 .live-clock {
     display: flex;
-    justify-content: space-between; /* වෙලාව සහ දිනය දෙපසට තල්ලු කරයි */
+    justify-content: center; /* මැදට පෙළගැස්වීම */
     align-items: center;
-    width: 88%;
-    margin: 15px auto 0;
-    padding: 10px 22px;
-    background: rgba(255, 255, 255, 0.03); /* ඉතා සියුම් විනිවිද පෙනෙන පසුබිම */
-    backdrop-filter: blur(10px); /* වීදුරු වැනි පෙනුමක් (Glassmorphism) */
+    gap: 15px; /* වෙලාව සහ දිනය අතර පරතරය */
+    width: 90%;
+    margin: 20px auto 0;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.02); /* ඉතා සියුම් පසුබිම */
     border-radius: 12px;
-    border: 1px solid rgba(255, 215, 0, 0.15); /* ඉතා ලා රන්වන් බෝඩරය */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    /* ඉහළ සහ පහළ සියුම් රේඛා */
+    border-top: 1px solid rgba(255, 215, 0, 0.15);
+    border-bottom: 1px solid rgba(255, 215, 0, 0.15);
 }
 
-.time-part {
-    font-size: 17px;
-    font-weight: 700;
-    color: #FFD700; /* රන්වන් පැහැය */
-    font-family: 'monospace';
-    letter-spacing: 1px;
-    text-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
-}
-
-.date-part {
-    font-size: 11px;
+.time-part, .date-part {
+    font-size: 14.5px; /* අංග දෙකම එකම ප්‍රමාණයෙන් */
     font-weight: 500;
-    color: rgba(255, 215, 0, 0.7);
-    text-transform: uppercase;
-    letter-spacing: 2px;
+    color: #FFD700;
+    letter-spacing: 1px;
+    font-family: 'Noto Sans Sinhala', sans-serif; /* ඇප් එකේ පොදු අකුරු රටාව */
+}
 
+.separator {
+    width: 1px;
+    height: 15px;
+    background: rgba(255, 215, 0, 0.3); /* මැද ඇති සියුම් වෙන් කිරීමේ ඉර */
 }
 
     body {
@@ -1083,27 +1080,26 @@ function updateDigitalClock() {
 
     const now = new Date();
 
-    // වෙලාව (Time) Premium විදිහට සකස් කිරීම
+    // වෙලාව සකස් කිරීම
     let hours = now.getHours();
     const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
     const ampm = hours >= 12 ? 'PM' : 'AM';
     hours = hours % 12 || 12;
-    const hoursStr = String(hours).padStart(2, '0');
+    const timeStr = `${hours}:${minutes} ${ampm}`;
 
-    // දිනය (Date) සන්සුන් විදිහට සකස් කිරීම
+    // දිනය සකස් කිරීම
     const year = now.getFullYear();
     const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
     const month = months[now.getMonth()];
     const day = String(now.getDate()).padStart(2, '0');
     const dateStr = `${day} ${month} ${year}`;
 
-    // දෙපසට පෙනෙන ලෙස HTML එකට ඇතුළත් කිරීම
+    // HTML අන්තර්ගතය - මැදට සියුම් ඉරක් (Separator) සමඟ
     clockElement.innerHTML = `
-        <span class="time-part">${hoursStr}:${minutes}:${seconds} ${ampm}</span>
+        <span class="time-part">${timeStr}</span>
+        <div class="separator"></div>
         <span class="date-part">${dateStr}</span>
     `;
-
 }
 
 // ඔරලෝසුව පණ ගැන්වීම

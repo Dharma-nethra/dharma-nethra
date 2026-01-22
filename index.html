@@ -108,6 +108,19 @@
     background: rgba(255, 215, 0, 0.2) !important;
     border: 1px solid #FFD700 !important;
 }
+.tool-btn {
+    cursor: pointer;
+    min-width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 215, 0, 0.1);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: 8px;
+    margin: 0 5px;
+    font-size: 18px;
+}
 
     /* Fixed Bottom Nav */
     .bottom-nav {
@@ -1126,39 +1139,31 @@ function toggleSpeech(articleId) {
     const btn = document.getElementById(`btn-audio-${articleId}`);
     const contentDiv = document.getElementById(`c-${articleId}`);
 
-    // හඳුනාගැනීමේ දෝෂයක් ඇත්දැයි පරීක්ෂා කිරීම
-    if (!btn || !contentDiv) {
-        console.error("Content or Button not found");
-        return;
-    }
+    // 1. බොත්තම සහ අන්තර්ගතය තිබේදැයි පරීක්ෂාව
+    if (!btn || !contentDiv) return;
 
-    // දැනට ශබ්දය ඇසෙනවා නම් එය නතර කරන්න
+    // 2. දැනට කියවනවා නම් එය වහාම නතර කර අයිකනය වෙනස් කිරීම
     if (window.speechSynthesis.speaking) {
         window.speechSynthesis.cancel();
         btn.innerText = "🔊";
         return;
     }
 
-    const textToRead = contentDiv.innerText;
-    const utterance = new SpeechSynthesisUtterance(textToRead);
-    
-    // සිංහල භාෂාව තේරීම
-    utterance.lang = 'si-LK'; 
-    utterance.rate = 0.85; // වේගය සන්සුන් කිරීම
-
-    // කියවා අවසන් වූ පසු බොත්තම යථා තත්ත්වයට පත් කිරීම
-    utterance.onend = function() {
-        btn.innerText = "🔊";
-    };
-
-    // දෝෂයක් සිදු වුවහොත් පරීක්ෂා කිරීම
-    utterance.onerror = function(event) {
-        console.error("SpeechSynthesis error", event);
-        btn.innerText = "🔊";
-    };
-
-    window.speechSynthesis.speak(utterance);
+    // 3. කියවීම ආරම්භ කිරීමට පෙරම අයිකනය වෙනස් කිරීම (Visual Feedback)
     btn.innerText = "⏹️";
+
+    const textToRead = contentDiv.innerText;
+    speechInstance = new SpeechSynthesisUtterance(textToRead);
+    speechInstance.lang = 'si-LK';
+    speechInstance.rate = 0.85;
+
+    // 4. කියවා අවසන් වූ විට නැවත අයිකනය වෙනස් කිරීම
+    speechInstance.onend = () => { btn.innerText = "🔊"; };
+    speechInstance.onerror = () => { btn.innerText = "🔊"; };
+
+    // 5. ඇතැම් දුරකථනවල ඇති අවහිරතා ඉවත් කර ශබ්දය පණ ගැන්වීම
+    window.speechSynthesis.resume(); 
+    window.speechSynthesis.speak(speechInstance);
 }
   </script>
 </body>

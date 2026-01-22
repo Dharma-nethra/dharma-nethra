@@ -59,6 +59,15 @@
     border: 1px solid #c8e6c9;
     font-weight: normal;
 }
+.live-clock {
+    font-size: 16px;
+    font-weight: bold;
+    color: #FFD700; /* රන්වන් පැහැය */
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+    margin-top: 5px;
+    letter-spacing: 1.5px;
+    font-family: 'monospace'; 
+}
 
     body {
       font-family: 'Noto Sans Sinhala', sans-serif;
@@ -352,6 +361,7 @@
     <div class="premium-header">
       <h1>ධර්ම නේත්‍රා</h1>
       <p>ප්‍රඥාවේ ආලෝකය පතුරුවන සදහම් අවකාශය</p>
+<div id="digitalClock" class="live-clock">00:00:00 AM</div>
     </div>
 
     <div class="zen-card">
@@ -948,6 +958,26 @@ function isArticleRead(id) {
     let readArticles = JSON.parse(localStorage.getItem('readArticles')) || [];
     return readArticles.includes(id);
 }
+// ඔරලෝසුව යාවත්කාලීන කරන ශ්‍රිතය
+function updateDigitalClock() {
+    const clockElement = document.getElementById('digitalClock');
+    if (!clockElement) return;
+
+    const now = new Date();
+    let hours = now.getHours();
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    
+    hours = hours % 12 || 12; // පැය 12 ක්‍රමයට සැකසීම
+    const hoursStr = String(hours).padStart(2, '0');
+
+    clockElement.textContent = `${hoursStr}:${minutes}:${seconds} ${ampm}`;
+}
+
+// ඔරලෝසුව පණ ගැන්වීම
+setInterval(updateDigitalClock, 1000);
+updateDigitalClock();
   </script>
 </body>
 

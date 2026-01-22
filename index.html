@@ -3,122 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ධර්ම නේත්‍රා - Dharma Nethra</title>
+    <title>ධර්ම නේත්‍රා - Ultra Modern</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
         :root {
-            --primary: #d35400; --accent: #8e44ad; --bg: #fdfbf7; --card: #ffffff;
-            --text: #2c3e50; --shadow: 0 4px 20px rgba(0,0,0,0.05); --read: #27ae60;
+            --p: #d35400; --s: #f39c12; --bg: #fdfaf6; --c: #ffffff;
+            --t: #2d3436; --sh: 0 10px 40px rgba(0,0,0,0.05); --glass: rgba(255, 255, 255, 0.7);
         }
-        .dark-mode { --bg: #121212; --text: #e0e0e0; --card: #1e1e1e; --shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .dark-mode { --bg: #0f0f0f; --t: #f0f0f0; --c: #1a1a1a; --sh: 0 10px 40px rgba(0,0,0,0.4); --glass: rgba(30, 30, 30, 0.8); }
         
-        * { user-select: none; box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Noto Sans Sinhala', 'Poppins', sans-serif; }
-        body { background-color: var(--bg); color: var(--text); transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); margin: 0; padding-bottom: 110px; }
-        
-        /* Home-Only Header Design */
+        * { user-select: none; box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Noto Sans Sinhala', 'Poppins', sans-serif; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        body { background: var(--bg); color: var(--t); margin: 0; padding-bottom: 120px; overflow-x: hidden; }
+
+        /* --- Glassmorphism Header --- */
         .header { 
-            background: var(--card); padding: 25px 20px; text-align: center; 
-            border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; 
-            box-shadow: var(--shadow); margin-bottom: 15px;
+            background: var(--glass); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            padding: 25px 20px; text-align: center; position: sticky; top: 0; z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2); box-shadow: var(--sh);
+            border-bottom-left-radius: 35px; border-bottom-right-radius: 35px;
         }
-        .app-logo { width: 50px; margin-bottom: 5px; filter: drop-shadow(0 2px 5px rgba(211, 84, 0, 0.2)); }
-        .app-name { font-size: 30px; font-weight: 700; color: var(--primary); margin: 0; letter-spacing: -0.5px; }
-        .slogan { font-size: 13px; font-style: italic; opacity: 0.7; margin-top: 5px; }
-        
-        .clock-strip { 
-            background: rgba(211, 84, 0, 0.05); padding: 8px 15px; border-radius: 15px;
-            display: inline-flex; align-items: center; gap: 10px; margin-top: 15px; color: var(--primary); font-weight: 600;
-        }
+        .app-name { font-size: 32px; font-weight: 700; background: linear-gradient(to right, var(--p), #c0392b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
+        .slogan { font-size: 13px; font-style: italic; opacity: 0.7; margin-top: 5px; color: var(--t); }
 
-        /* Nav Bar - Floating Modern Style */
+        /* --- Stats Chart Element --- */
+        .stats-box { background: var(--c); padding: 15px; border-radius: 20px; display: flex; align-items: flex-end; gap: 8px; height: 100px; margin-top: 15px; justify-content: center; box-shadow: inset 0 2px 10px rgba(0,0,0,0.02); }
+        .bar { width: 15px; background: var(--p); border-radius: 5px; animation: grow 1s ease-out; }
+        @keyframes grow { from { height: 0; } }
+
+        /* --- Floating Navigation --- */
         .bottom-nav { 
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 94%; max-width: 600px; 
-            background: var(--card); display: flex; justify-content: space-around; padding: 12px 5px; 
-            border-radius: 35px; box-shadow: 0 15px 40px rgba(0,0,0,0.12); z-index: 1001; 
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 550px; 
+            background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            display: flex; justify-content: space-around; padding: 12px 5px; 
+            border-radius: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.15); z-index: 1001;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .nav-item { font-size: 10px; cursor: pointer; opacity: 0.4; transition: 0.3s ease; display: flex; flex-direction: column; align-items: center; }
-        .nav-item.active { opacity: 1; color: var(--primary); transform: translateY(-5px); font-weight: 700; }
-        .nav-icon { font-size: 22px; margin-bottom: 3px; }
+        .nav-item { font-size: 10px; cursor: pointer; opacity: 0.4; display: flex; flex-direction: column; align-items: center; }
+        .nav-item.active { opacity: 1; color: var(--p); transform: translateY(-8px) scale(1.1); font-weight: 700; }
+        .nav-icon { font-size: 24px; margin-bottom: 4px; }
 
-        .container { padding: 10px 20px; max-width: 700px; margin: auto; }
+        .container { padding: 15px 20px; max-width: 750px; margin: auto; }
         
-        /* Creative Card Styles */
+        /* --- Premium Article Cards --- */
         .article-card { 
-            background: var(--card); padding: 25px; border-radius: 28px; margin-bottom: 25px; 
-            box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.02); transition: 0.3s;
+            background: var(--c); padding: 25px; border-radius: 30px; margin-bottom: 25px; 
+            box-shadow: var(--sh); position: relative; border: 1px solid rgba(0,0,0,0.02);
         }
-        .article-card:active { transform: scale(0.98); }
-        .title { font-size: 21px; font-weight: 700; color: var(--primary); line-height: 1.4; margin-bottom: 10px; }
-        .snippet { font-size: 15px; line-height: 1.6; opacity: 0.8; margin-top: 8px; }
-        
-        .badge { position: absolute; top: 15px; right: 25px; background: var(--read); color: white; font-size: 9px; padding: 4px 10px; border-radius: 12px; font-weight: 700; }
+        .title { font-size: 22px; font-weight: 700; color: var(--p); line-height: 1.4; }
+        .snippet { font-size: 16px; opacity: 0.8; margin-top: 10px; line-height: 1.6; }
+        .read-tag { position: absolute; top: 15px; right: 25px; background: #e8f5e9; color: #27ae60; padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: 700; }
 
-        /* Timer Block */
-        .timer-circle { 
-            width: 180px; height: 180px; border: 8px solid rgba(211, 84, 0, 0.1); 
-            border-radius: 50%; margin: 20px auto; display: flex; align-items: center; justify-content: center;
-            font-size: 45px; font-weight: 700; color: var(--primary); border-top-color: var(--primary);
-        }
-
-        /* Buttons & Actions */
+        /* --- Buttons --- */
         .btn { 
-            border: none; padding: 12px 22px; border-radius: 40px; cursor: pointer; 
-            font-weight: 700; transition: 0.3s; margin: 6px; font-size: 14px;
-            background: var(--primary); color: white; box-shadow: 0 5px 15px rgba(211, 84, 0, 0.2);
+            border: none; padding: 12px 25px; border-radius: 50px; cursor: pointer; font-weight: 700; font-size: 14px;
+            background: linear-gradient(135deg, var(--p), var(--s)); color: white; box-shadow: 0 10px 20px rgba(211, 84, 0, 0.2); margin: 5px;
         }
-        .btn-ghost { background: transparent; color: var(--primary); border: 2px solid var(--primary); box-shadow: none; }
-        .btn-dark { background: #2c3e50; } .btn-wa { background: #25D366; box-shadow: 0 5px 15px rgba(37, 211, 102, 0.2); }
+        .btn-ghost { background: transparent; color: var(--p); border: 2px solid var(--p); box-shadow: none; }
+
+        /* --- Timer Circle --- */
+        .timer-ui { 
+            width: 200px; height: 200px; border-radius: 50%; border: 10px solid rgba(211, 84, 0, 0.05);
+            margin: 20px auto; display: flex; align-items: center; justify-content: center;
+            font-size: 50px; font-weight: 700; color: var(--p); border-top-color: var(--p); position: relative;
+        }
 
         .hidden { display: none; }
-        input, textarea { width: 100%; padding: 15px; border-radius: 18px; border: 1.5px solid #eee; margin: 10px 0; background: var(--bg); color: var(--text); outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--primary); }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
 <div class="header" id="app-header">
-    <img src="https://cdn-icons-png.flaticon.com/512/11637/11637866.png" class="app-logo" alt="Lotus">
     <h1 class="app-name">ධර්ම නේත්‍රා</h1>
     <div class="slogan">"ප්‍රඥාවේ ආලෝකය පතුරුවන සදහම් අවකාශය"</div>
-    <div class="clock-strip">
-        <span id="clock">00:00:00</span> | <span id="date">දිනය පූරණය වේ...</span>
-    </div><br>
-    <button class="btn btn-ghost" style="padding: 5px 15px; font-size: 11px; margin-top: 10px;" onclick="toggleDarkMode()">🌙 Dark Mode</button>
+    
+    <div class="stats-box">
+        <div class="bar" style="height: 40%;"></div>
+        <div class="bar" style="height: 60%;"></div>
+        <div class="bar" style="height: 30%;"></div>
+        <div class="bar" style="height: 80%;"></div>
+        <div class="bar" style="height: 50%;"></div>
+        <div class="bar" style="height: 90%;"></div>
+        <div class="bar" style="height: 20%;"></div>
+        <div style="font-size: 10px; opacity: 0.5; position: absolute; bottom: 5px;">සතිපතා ධර්ම ශ්‍රවණය</div>
+    </div>
+    
+    <div style="margin-top: 15px; font-size: 14px; font-weight: 600; color: var(--p);">
+        <span id="clock">00:00:00</span> | <span id="date">පූරණය වේ...</span>
+    </div>
+    <button class="btn btn-ghost" style="padding: 5px 15px; font-size: 10px; margin-top: 10px;" onclick="toggleDarkMode()">🌙 Dark Mode</button>
 </div>
 
 <div class="container" id="main-content">
     <div id="page-home">
         <div class="article-card" style="text-align:center;">
-            <h3 style="margin:0; font-size: 17px; opacity: 0.7;">🧘 භාවනා කාල ගණකය</h3>
-            <div class="timer-circle" id="timer-display">10:00</div>
+            <h3 style="margin:0; opacity: 0.6;">🧘 භාවනා කාල ගණකය</h3>
+            <div class="timer-ui" id="timer-display">10:00</div>
             <button class="btn" onclick="startTimer()">ආරම්භය</button>
-            <button class="btn btn-ghost" onclick="resetTimer()">නැවත සකසන්න</button>
+            <button class="btn btn-ghost" onclick="resetTimer()">නැවත</button>
         </div>
         <div id="article-list"></div>
     </div>
 
     <div id="page-reader" class="hidden">
-        <button class="btn btn-ghost" style="margin-bottom: 15px;" onclick="showPage('page-home')">⬅️ ආපසු</button>
+        <button class="btn btn-ghost" onclick="showPage('page-home')">⬅️ ආපසු</button>
         <div class="article-card">
-            <h2 id="view-title" class="title" style="font-size: 24px;"></h2>
-            <div style="height:2px; background:rgba(211, 84, 0, 0.1); width: 60px; margin: 15px 0;"></div>
+            <h2 id="view-title" class="title" style="font-size: 26px;"></h2>
             <div id="view-content" style="line-height:1.9; text-align:justify; font-size:18px;"></div>
             
-            <div style="margin-top:30px; border-top:1.5px solid #f8f8f8; padding-top:20px; text-align:center;">
-                <p style="font-size: 13px; opacity: 0.6; margin-bottom: 15px;">ලිපිය පිළිබඳ ඔබගේ විමසීම් හෝ අදහස් යොමු කරන්න:</p>
-                <button class="btn btn-wa" onclick="contactWA()">💬 WhatsApp</button>
-                <button class="btn" style="background:#e74c3c" onclick="contactMail()">📧 Email</button>
+            <div style="margin-top:30px; border-top:1px solid #eee; padding-top:20px; text-align:center;">
+                <p style="font-size: 12px; opacity: 0.5;">මෙම ලිපිය පිළිබඳ විමසන්න:</p>
+                <button class="btn" style="background:#25D366" onclick="contactWA()">💬 WhatsApp</button>
+                <button class="btn" style="background:#8e44ad" onclick="readArt()">🔊 ශ්‍රවණය</button>
                 <div style="margin-top: 15px;">
                     <button class="btn btn-ghost" onclick="changeSize(2)">A+</button>
                     <button class="btn btn-ghost" onclick="changeSize(-2)">A-</button>
-                    <button class="btn btn-dark" onclick="readArt()">🔊 ශ්‍රවණය</button>
                 </div>
-            </div>
-            <div style="display:flex; justify-content: space-between; margin-top:25px;">
-                <button class="btn btn-ghost" onclick="nav(-1)">⬅️ පෙර</button>
-                <button class="btn btn-ghost" onclick="nav(1)">මීළඟ ➡️</button>
             </div>
         </div>
     </div>
@@ -126,8 +127,8 @@
     <div id="page-merit" class="hidden">
         <div class="article-card">
             <h2 class="title">📖 පිං පොත</h2>
-            <input type="date" id="merit-date">
-            <textarea id="merit-text" rows="3" placeholder="අද කළ පින්කම..."></textarea>
+            <input type="date" id="merit-date" style="width:100%; padding:15px; border-radius:15px; border:1px solid #ddd;">
+            <textarea id="merit-text" rows="3" placeholder="අද කළ පින්කම..." style="width:100%; padding:15px; border-radius:15px; border:1px solid #ddd; margin: 15px 0;"></textarea>
             <button class="btn" style="width:100%" onclick="addMerit()">සටහන් කරන්න</button>
         </div>
         <div id="merit-list"></div>
@@ -135,33 +136,11 @@
 
     <div id="page-donate" class="hidden">
         <div class="article-card">
-            <h2 class="title" style="text-align: center;">🙏 ආධාර (Support)</h2>
-            <p style="text-align: center; opacity: 0.8;">ධර්ම ප්‍රචාරක කටයුතු පවත්වාගෙන යාමට සහය වන්න.</p>
-            <div style="background:#fffaf0; padding:20px; border-radius:20px; border:1px solid #ffe0b2; color:#333; margin: 15px 0;">
-                <b>බැංකු විස්තර (BOC):</b><br>ගිණුම් නාමය: ධර්ම නේත්‍රා අරමුදල<br>ගිණුම් අංකය: 1234567890<br>ශාඛාව: කොළඹ
+            <h2 class="title" style="text-align:center;">🙏 ආධාර (Support Us)</h2>
+            <div style="background:rgba(211, 84, 0, 0.05); padding:20px; border-radius:20px; border:1px dashed var(--p);">
+                <b>Bank:</b> BOC (ලංකා බැංකුව)<br><b>Account:</b> 1234567890<br><b>Name:</b> Dharma Nethra
             </div>
-            <button class="btn btn-wa" style="width:100%" onclick="window.open('https://wa.me/94771234567?text=Donation Receipt')">💬 රිසිට්පත එවන්න</button>
-        </div>
-    </div>
-
-    <div id="page-about" class="hidden">
-        <div class="article-card">
-            <h2 class="title" style="text-align:center;">🧘 ස්වාමීන් වහන්සේ</h2>
-            <p style="text-align:justify; font-size: 15px; opacity: 0.9;">ස්වාමීන් වහන්සේ සහ සදහම් වැඩසටහන් පිළිබඳ තොරතුරු...</p>
-            <hr style="opacity: 0.1; margin: 20px 0;">
-            <h2 class="title" style="text-align:center;">🏛️ ආයතනය</h2>
-            <p style="text-align:justify; font-size: 15px; opacity: 0.9;">ධර්ම නේත්‍රා ආයතනයේ දැක්ම සහ අරමුණු...</p>
-        </div>
-    </div>
-
-    <div id="page-contact" class="hidden">
-        <div class="article-card" style="text-align: center;">
-            <h2 class="title">📞 සම්බන්ධ වන්න</h2>
-            <div style="display: grid; gap: 10px;">
-                <button class="btn btn-dark" onclick="location.href='tel:+94771234567'">📱 දුරකථන: +94 77 123 4567</button>
-                <button class="btn btn-wa" onclick="window.open('https://wa.me/94771234567')">💬 WhatsApp</button>
-                <button class="btn btn-ghost" onclick="location.href='mailto:info@dharmanethra.lk'">📧 Email ලිපියක්</button>
-            </div>
+            <button class="btn" style="width:100%; margin-top:20px; background:#25D366" onclick="window.open('https://wa.me/94771234567?text=Donation')">💬 රිසිට්පත එවන්න</button>
         </div>
     </div>
 </div>
@@ -171,7 +150,6 @@
     <div class="nav-item" onclick="showPage('page-fav', this)"><span class="nav-icon">❤️</span>ප්‍රියතම</div>
     <div class="nav-item" onclick="showPage('page-merit', this)"><span class="nav-icon">📖</span>පිං පොත</div>
     <div class="nav-item" onclick="showPage('page-donate', this)"><span class="nav-icon">🙏</span>ආධාර</div>
-    <div class="nav-item" onclick="showPage('page-about', this)"><span class="nav-icon">ℹ️</span>අප ගැන</div>
     <div class="nav-item" onclick="showPage('page-contact', this)"><span class="nav-icon">📞</span>සම්බන්ධ</div>
 </div>
 
@@ -211,14 +189,12 @@
         const list = document.getElementById('article-list');
         list.innerHTML = data.map((a, i) => `
             <div class="article-card" onclick="openArt(${i})">
-                ${reads.includes(a.id) ? '<span class="badge">✅ කියවන ලදී</span>' : ''}
+                ${reads.includes(a.id) ? '<span class="read-tag">කියවන ලදී</span>' : ''}
                 <div class="title">${a.title}</div>
                 <p class="snippet">${a.snippet}</p>
-                <div style="margin-top:15px; display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-size:12px; font-weight:700; color:var(--primary); opacity:0.8;">කියවීමට තට්ටු කරන්න</span>
-                    <span style="font-size:22px; cursor:pointer;" onclick="event.stopPropagation(); toggleFav('${a.id}')">
-                        ${favs.includes(a.id) ? '💖' : '❤️'}
-                    </span>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px;">
+                    <span style="font-size:12px; color:var(--p); font-weight:700;">කියවීමට තට්ටු කරන්න</span>
+                    <span style="font-size:24px;" onclick="event.stopPropagation(); toggleFav('${a.id}')">${favs.includes(a.id) ? '💖' : '❤️'}</span>
                 </div>
             </div>
         `).join('');
@@ -232,48 +208,33 @@
         document.getElementById('view-content').innerText = a.content;
     }
 
-    // Adaptive Header Logic
     function showPage(id, el) {
-        const ps = ['page-home', 'page-reader', 'page-merit', 'page-donate', 'page-about', 'page-contact'];
+        const ps = ['page-home', 'page-reader', 'page-merit', 'page-donate'];
         ps.forEach(p => document.getElementById(p).classList.add('hidden'));
         
-        const header = document.getElementById('app-header');
-        if (id === 'page-home') header.classList.remove('hidden'); else header.classList.add('hidden');
+        const h = document.getElementById('app-header');
+        if (id === 'page-home') h.classList.remove('hidden'); else h.classList.add('hidden');
 
         if(el) { document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); el.classList.add('active'); }
         
         if(id === 'page-fav') {
             document.getElementById('page-home').classList.remove('hidden');
             render(articles.filter(x => favs.includes(x.id)));
-            header.classList.remove('hidden');
+            h.classList.remove('hidden');
         } else {
             document.getElementById(id).classList.remove('hidden');
             if(id === 'page-home') render(articles);
-            if(id === 'page-merit') renderMerits();
+            if(id === 'page-merit') drawMerits();
         }
         window.scrollTo(0,0);
-    }
-
-    // ස්වයංක්‍රීය පණිවිඩ පද්ධතිය (WhatsApp/Email)
-    function contactWA() {
-        const t = articles[curIdx].title;
-        const msg = `ගෞරවනීය ස්වාමින් වහන්ස, '${t}' ලිපිය පිළිබඳවයි: \n\n`;
-        window.open(`https://wa.me/94771234567?text=${encodeURIComponent(msg)}`);
-    }
-    function contactMail() {
-        const t = articles[curIdx].title;
-        const subj = encodeURIComponent(`ධර්ම නේත්‍රා විමසීම - ${t}`);
-        const body = encodeURIComponent(`ගෞරවනීය ස්වාමින් වහන්ස, '${t}' ලිපිය පිළිබඳවයි: \n\n`);
-        window.location.href = `mailto:info@dharmanethra.lk?subject=${subj}&body=${body}`;
     }
 
     function toggleDarkMode() { document.body.classList.toggle('dark-mode'); }
     function changeSize(v) { fs += v; document.getElementById('view-content').style.fontSize = fs + 'px'; }
     function readArt() { window.speechSynthesis.cancel(); let u = new SpeechSynthesisUtterance(document.getElementById('view-content').innerText); u.lang='si-LK'; window.speechSynthesis.speak(u); }
+    function contactWA() { window.open(`https://wa.me/94771234567?text=${encodeURIComponent(`ගෞරවනීය ස්වාමින් වහන්ස, '${articles[curIdx].title}' ලිපිය පිළිබඳවයි:\n\n`)}`); }
     function toggleFav(id) { favs = favs.includes(id) ? favs.filter(x => x !== id) : [...favs, id]; localStorage.setItem('f', JSON.stringify(favs)); render(articles); }
-    function nav(v) { let n = curIdx + v; if(n >= 0 && n < articles.length) openArt(n); }
 
-    // පිං පොත
     function addMerit() {
         const d = document.getElementById('merit-date').value; const t = document.getElementById('merit-text').value;
         if(d && t) { merits.unshift({ d, t, id: Date.now() }); localStorage.setItem('m', JSON.stringify(merits)); drawMerits(); document.getElementById('merit-text').value = ""; }
@@ -281,9 +242,9 @@
     function drawMerits() {
         document.getElementById('merit-list').innerHTML = merits.map(m => `
             <div class="article-card">
-                <div style="font-weight:700; color:var(--primary);">${m.d}</div>
-                <div style="font-size:16px; margin-top:5px; opacity:0.9;">${m.t}</div>
-                <span style="position:absolute; right:25px; top:25px; cursor:pointer;" onclick="delMerit(${m.id})">🗑️</span>
+                <div style="font-weight:700; color:var(--p);">${m.d}</div>
+                <p style="margin:5px 0;">${m.t}</p>
+                <span style="position:absolute; right:20px; top:20px; cursor:pointer;" onclick="delMerit(${m.id})">🗑️</span>
             </div>
         `).join('');
     }

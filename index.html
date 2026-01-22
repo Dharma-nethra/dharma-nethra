@@ -1015,7 +1015,7 @@ markAsRead(id); // ලිපිය කියවූ බව සටහන් කර
       let prevBtn = index > 0 ? `<button class="btn-gold btn-outline" style="flex:1" onclick="showPage('${sortedArticles[index-1].id}')">◀ පෙර ලිපිය</button>` : `<div style="flex:1"></div>`;
       let nextBtn = index < sortedArticles.length - 1 ? `<button class="btn-gold" style="flex:1" onclick="showPage('${sortedArticles[index+1].id}')">මීළඟ ලිපිය ▶</button>` : `<div style="flex:1"></div>`;
       container.innerHTML += `
-                <div id="${a.id}" class="page">
+                <div id="${a.id}" class="page"> 
                     <div class="tool-bar">
 <button class="tool-btn" id="btn-audio-${a.id}" onclick="toggleSpeech('${a.id}')" title="ශ්‍රවණය කරන්න">🔊</button>
                         <button class="tool-btn" onclick="adjFont(-1.5)">A-</button>
@@ -1136,35 +1136,50 @@ document.addEventListener('selectstart', function(e) {
 let speechInstance = null;
 
 function toggleSpeech(articleId) {
-    const btn = document.getElementById(`btn-audio-${articleId}`);
-    const contentDiv = document.getElementById(`c-${articleId}`);
+    try {
+        const btn = document.getElementById(`btn-audio-${articleId}`);
+        const contentDiv = document.getElementById(`c-${articleId}`);
 
-    // 1. බොත්තම සහ අන්තර්ගතය තිබේදැයි පරීක්ෂාව
-    if (!btn || !contentDiv) return;
+        // 1. බොත්තම හෝ අන්තර්ගතය සොයාගත නොහැකි නම් පණිවිඩයක් පෙන්වීම
+        if (!btn || !contentDiv) {
+            alert("තාක්ෂණික දෝෂයකි: බොත්තම හෝ ලිපිය හඳුනාගත නොහැක.");
+            return;
+        }
 
-    // 2. දැනට කියවනවා නම් එය වහාම නතර කර අයිකනය වෙනස් කිරීම
-    if (window.speechSynthesis.speaking) {
-        window.speechSynthesis.cancel();
-        btn.innerText = "🔊";
-        return;
+        // 2. දැනට කියවනවා නම් නතර කිරීම
+        if (window.speechSynthesis.speaking) {
+            window.speechSynthesis.cancel();
+            btn.innerText = "🔊";
+            return;
+        }
+
+        // 3. පෙළ ලබා ගැනීම සහ අයිකනය වහාම වෙනස් කිරීම
+        const textToRead = contentDiv.innerText.trim();
+        if (textToRead.length === 0) {
+            alert("ලිපියේ අන්තර්ගතයක් හමු නොවීය.");
+            return;
+        }
+
+        btn.innerText = "⏹️"; // ටච් කළ සැණින් අයිකනය වෙනස් වේ
+
+        const utterance = new SpeechSynthesisUtterance(textToRead);
+        utterance.lang = 'si-LK';
+        utterance.rate = 0.85;
+
+        // කියවා අවසන් වූ පසු
+        utterance.onend = () => { btn.innerText = "🔊"; };
+        
+        // කියවීමේදී දෝෂයක් වුවහොත්
+        utterance.onerror = (e) => { 
+            btn.innerText = "🔊";
+            alert("කථන දෝෂයකි: " + e.error);
+        };
+
+        window.speechSynthesis.speak(utterance);
+
+    } catch (err) {
+        alert("පද්ධති දෝෂයකි: " + err.message);
     }
-
-    // 3. කියවීම ආරම්භ කිරීමට පෙරම අයිකනය වෙනස් කිරීම (Visual Feedback)
-    btn.innerText = "⏹️";
-
-    const textToRead = contentDiv.innerText;
-    speechInstance = new SpeechSynthesisUtterance(textToRead);
-    speechInstance.lang = 'si-LK';
-    speechInstance.rate = 0.85;
-
-    // 4. කියවා අවසන් වූ විට නැවත අයිකනය වෙනස් කිරීම
-    speechInstance.onend = () => { btn.innerText = "🔊"; };
-    speechInstance.onerror = () => { btn.innerText = "🔊"; };
-
-    // 5. ඇතැම් දුරකථනවල ඇති අවහිරතා ඉවත් කර ශබ්දය පණ ගැන්වීම
-    window.speechSynthesis.resume(); 
-    window.speechSynthesis.speak(speechInstance);
-}
   </script>
 </body>
 

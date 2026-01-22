@@ -76,6 +76,10 @@
 }
 
     body {
+      -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
       font-family: 'Noto Sans Sinhala', sans-serif;
       background-color: var(--bg-light);
       margin: 0;
@@ -984,6 +988,15 @@ function updateDigitalClock() {
 // ඔරලෝසුව පණ ගැන්වීම
 setInterval(updateDigitalClock, 1000);
 updateDigitalClock();
+    // මවුස් එකේ දකුණු පස ක්ලික් කිරීම සහ දිගු වෙලාවක් ටච් කරගෙන සිටීම වැළැක්වීම
+document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+});
+
+// අකුරු තෝරා ගැනීම ආරම්භ කිරීම වැළැක්වීම
+document.addEventListener('selectstart', function(e) {
+    e.preventDefault();
+});
   </script>
 </body>
 

@@ -929,11 +929,20 @@
       });
     }
     window.onload = initApp;
+// ලිපියක් කියවූ බව මතක තබා ගැනීමට සහ පරීක්ෂා කිරීමට
+function markAsRead(id) {
+    let readArticles = JSON.parse(localStorage.getItem('readArticles')) || [];
+    if (!readArticles.includes(id)) {
+        readArticles.push(id);
+        localStorage.setItem('readArticles', JSON.stringify(readArticles));
+    }
+}
+
+function isArticleRead(id) {
+    let readArticles = JSON.parse(localStorage.getItem('readArticles')) || [];
+    return readArticles.includes(id);
+}
   </script>
 </body>
 
-</html>
-    
-  </body>
-  
 </html>

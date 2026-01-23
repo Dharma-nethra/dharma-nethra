@@ -381,7 +381,7 @@
         let timerPtr;
         let synth = window.speechSynthesis;
         let curArticle = "";
-        let allArticleIds = []; // සියලුම ලිපිවල IDs පිළිවෙළට තබා ගැනීමට
+        let allArticleIds = []; // සියලුම ලිපිවල IDs ලැයිස්තුව
 
         // Clock Logic
         function updateClock() {
@@ -447,7 +447,7 @@
                 snap.forEach((child) => {
                     const a = child.val();
                     const id = child.key;
-                    allArticleIds.push(id); // ID එක ලැයිස්තුවට එක් කිරීම
+                    allArticleIds.push(id); // ලිපියේ ID එක ලැයිස්තුවට එකතු කිරීම
 
                     list.innerHTML += `
                         <div class="card" onclick="openFull('${id}')" style="margin-bottom:15px; cursor:pointer;">
@@ -461,12 +461,12 @@
             }
         });
 
-        // Navigation (Main Sections)
+        // Navigation
         function nav(view) {
             document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active-view'));
             document.getElementById('view-' + view).classList.add('active-view');
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            event.currentTarget.classList.add('active');
+            if(event) event.currentTarget.classList.add('active');
             if(view === 'merit') showMerits();
             if(view === 'fav') showFavs();
             window.scrollTo(0,0);
@@ -474,7 +474,7 @@
 
         // ලිපිය විවෘත කිරීම
         function openFull(id) {
-            curArticle = id; // වත්මන් ලිපිය ලෙස මතක තබා ගැනීම
+            curArticle = id; // වත්මන් ලිපිය ලෙස තබා ගැනීම
             db.ref('articles/' + id).once('value').then(snap => {
                 const a = snap.val();
                 document.getElementById('full-title').innerText = a.title;
@@ -488,14 +488,15 @@
                     localStorage.setItem('myReads', JSON.stringify(readList));
                 }
                 document.getElementById('detail-overlay').style.display = 'block';
-                window.scrollTo(0,0);
+                document.getElementById('detail-overlay').scrollTop = 0; // ලිපියේ මුලටම යෑම
             });
         }
 
-        // "පෙර" සහ "මීළඟ" ලිපි වලට මාරුවීම සඳහා නව ශ්‍රිතය
-        function changeArticle(step) {
-            let index = allArticleIds.indexOf(curArticle);
-            let nextIndex = index + step;
+        // "පෙර" සහ "මීළඟ" ලිපි අතර මාරුවීම
+        function changeArticle(dir) {
+            let currentIndex = allArticleIds.indexOf(curArticle);
+            let nextIndex = currentIndex + dir;
+
             if (nextIndex >= 0 && nextIndex < allArticleIds.length) {
                 openFull(allArticleIds[nextIndex]);
             }
@@ -509,7 +510,7 @@
 
         // Favorites
         function doFav(id, e) {
-            e.stopPropagation();
+            if(e) e.stopPropagation();
             if(favs.includes(id)) favs = favs.filter(i => i !== id);
             else favs.push(id);
             localStorage.setItem('myFavs', JSON.stringify(favs));

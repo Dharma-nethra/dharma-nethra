@@ -151,9 +151,12 @@
         <span class="slogan">"ප්‍රඥාවේ ආලෝකය පතුරුවන සදහම් අවකාශය"</span>
         
         <div class="meditation-bar">
-            🧘 භාවනා කාලය: <b id="timer-val">00:00:00</b>
-            <button class="timer-ctrl" onclick="controlTimer()" id="timer-btn">අරඹන්න</button>
-        </div>
+    🧘 භාවනා කාලය: <b id="timer-val">00:00:00</b>
+    <div style="display: inline-flex; gap: 5px; margin-left: 10px;">
+        <button class="timer-ctrl" onclick="controlTimer()" id="timer-btn">අරඹන්න</button>
+        <button class="timer-ctrl" onclick="resetTimer()" style="background: rgba(255,255,255,0.2); color: white;">මුලට</button>
+    </div>
+</div>
 
         <div class="time-date-row">
             <span id="si-time">⏱ පූරණය වේ...</span>
@@ -324,6 +327,15 @@
                 clearInterval(timerPtr);
             }
         }
+
+    // භාවනා කාලය නැවත මුල සිට ආරම්භ කිරීම (Reset)
+    function resetTimer() {
+        timerActive = false;
+        clearInterval(timerPtr);
+        timeCount = 0;
+        document.getElementById('timer-val').innerText = "00:00:00";
+        document.getElementById('timer-btn').innerText = "අරඹන්න";
+    }
 
         // Article Loading
         db.ref('articles').on('value', (snap) => {

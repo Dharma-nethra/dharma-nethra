@@ -412,55 +412,52 @@
             }
         }
 
-    // භාවනා කාලය නැවත මුල සිට ආරම්භ කිරීම (Reset)
-    function resetTimer() {
-        timerActive = false;
-        clearInterval(timerPtr);
-        timeCount = 0;
-        document.getElementById('timer-val').innerText = "00:00:00";
-        document.getElementById('timer-btn').innerText = "අරඹන්න";
-    }
-
-// ලිපි සෙවීමේ ක්‍රියාවලිය
-function filterArticles() {
-    let input = document.getElementById('searchInput').value.toLowerCase();
-    let cards = document.getElementById('list').getElementsByClassName('card');
-
-    for (let i = 0; i < cards.length; i++) {
-        let title = cards[i].getElementsByTagName('h3')[0].innerText.toLowerCase();
-        let content = cards[i].getElementsByTagName('p')[0].innerText.toLowerCase();
-        
-        if (title.includes(input) || content.includes(input)) {
-            cards[i].style.display = "";
-        } else {
-            cards[i].style.display = "none";
+        // භාවනා කාලය නැවත මුල සිට ආරම්භ කිරීම (Reset)
+        function resetTimer() {
+            timerActive = false;
+            clearInterval(timerPtr);
+            timeCount = 0;
+            document.getElementById('timer-val').innerText = "00:00:00";
+            document.getElementById('timer-btn').innerText = "අරඹන්න";
         }
-    }
-}
 
-        // Article Loading
-        // ලිපි දත්ත පද්ධතියෙන් ලබාගෙන පෙන්වීම
-db.ref('articles').on('value', (snap) => {
-    const list = document.getElementById('article-list');
-    list.innerHTML = ''; // පැරණි දත්ත මකා දැමීම
+        // ලිපි සෙවීමේ ක්‍රියාවලිය (ID එක article-list ලෙස නිවැරදි කර ඇත)
+        function filterArticles() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let container = document.getElementById('article-list');
+            let cards = container.getElementsByClassName('card');
 
-    if (snap.exists()) {
-        snap.forEach((child) => {
-            const a = child.val();
-            const id = child.key;
+            for (let i = 0; i < cards.length; i++) {
+                let text = cards[i].innerText.toLowerCase();
+                if (text.includes(input)) {
+                    cards[i].style.display = "";
+                } else {
+                    cards[i].style.display = "none";
+                }
+            }
+        }
 
-            // මෙන්න මෙතැන class="card" යන්න එක් කිරීමෙන් සෙවුම් යන්ත්‍රය ක්‍රියා කරයි
-            list.innerHTML += `
-                <div class="card" onclick="openDetail('${id}')" style="margin-bottom:15px; cursor:pointer;">
-                    <h3>${a.title}</h3>
-                    <p style="font-size:14px; opacity:0.8;">${a.content.substring(0, 100)}...</p>
-                </div>
-            `;
+        // Article Loading (onclick නම openFull ලෙස නිවැරදි කර ඇත)
+        db.ref('articles').on('value', (snap) => {
+            const list = document.getElementById('article-list');
+            list.innerHTML = ''; 
+
+            if (snap.exists()) {
+                snap.forEach((child) => {
+                    const a = child.val();
+                    const id = child.key;
+
+                    list.innerHTML += `
+                        <div class="card" onclick="openFull('${id}')" style="margin-bottom:15px; cursor:pointer;">
+                            <h3>${a.title}</h3>
+                            <p style="font-size:14px; opacity:0.8;">${a.content.substring(0, 100)}...</p>
+                        </div>
+                    `;
+                });
+            } else {
+                list.innerHTML = '<p style="text-align:center; opacity:0.5;">තවමත් ලිපි ඇතුළත් කර නැත.</p>';
+            }
         });
-    } else {
-        list.innerHTML = '<p style="text-align:center; opacity:0.5;">තවමත් ලිපි ඇතුළත් කර නැත.</p>';
-    }
-});
 
         // Navigation
         function nav(view) {

@@ -381,6 +381,7 @@
         let timerPtr;
         let synth = window.speechSynthesis;
         let curArticle = "";
+        let allArticleIds = []; // සියලුම ලිපිවල IDs පිළිවෙළට තබා ගැනීමට
 
         // Clock Logic
         function updateClock() {
@@ -412,7 +413,6 @@
             }
         }
 
-        // භාවනා කාලය නැවත මුල සිට ආරම්භ කිරීම (Reset)
         function resetTimer() {
             timerActive = false;
             clearInterval(timerPtr);
@@ -421,7 +421,7 @@
             document.getElementById('timer-btn').innerText = "අරඹන්න";
         }
 
-        // ලිපි සෙවීමේ ක්‍රියාවලිය (ID එක article-list ලෙස නිවැරදි කර ඇත)
+        // ලිපි සෙවීමේ ක්‍රියාවලිය
         function filterArticles() {
             let input = document.getElementById('searchInput').value.toLowerCase();
             let container = document.getElementById('article-list');
@@ -437,15 +437,17 @@
             }
         }
 
-        // Article Loading (onclick නම openFull ලෙස නිවැරදි කර ඇත)
+        // ලිපි දත්ත පද්ධතියෙන් ලබාගෙන පෙන්වීම
         db.ref('articles').on('value', (snap) => {
             const list = document.getElementById('article-list');
             list.innerHTML = ''; 
+            allArticleIds = []; // ලැයිස්තුව නැවත සකස් කිරීම
 
             if (snap.exists()) {
                 snap.forEach((child) => {
                     const a = child.val();
                     const id = child.key;
+                    allArticleIds.push(id); // ID එක ලැයිස්තුවට එක් කිරීම
 
                     list.innerHTML += `
                         <div class="card" onclick="openFull('${id}')" style="margin-bottom:15px; cursor:pointer;">
@@ -459,7 +461,7 @@
             }
         });
 
-        // Navigation
+        // Navigation (Main Sections)
         function nav(view) {
             document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active-view'));
             document.getElementById('view-' + view).classList.add('active-view');
@@ -470,14 +472,14 @@
             window.scrollTo(0,0);
         }
 
-        // Full Article
+        // ලිපිය විවෘත කිරීම
         function openFull(id) {
+            curArticle = id; // වත්මන් ලිපිය ලෙස මතක තබා ගැනීම
             db.ref('articles/' + id).once('value').then(snap => {
                 const a = snap.val();
                 document.getElementById('full-title').innerText = a.title;
                 document.getElementById('full-content').innerText = a.content;
                 
-                // Inquiry links
                 document.getElementById('wa-inquiry').href = `https://wa.me/94778803779?text=ගෞරවනීය ස්වාමින් වහන්ස, '${a.title}' ලිපිය පිළිබඳවයි:`;
                 document.getElementById('mail-inquiry').href = `mailto:anhettigamapodihamuduruwo@gmail.com?subject=ලිපිය පිළිබඳ විමසීම&body=ගෞරවනීය ස්වාමින් වහන්ස, '${a.title}' ලිපිය පිළිබඳවයි:`;
 
@@ -486,7 +488,17 @@
                     localStorage.setItem('myReads', JSON.stringify(readList));
                 }
                 document.getElementById('detail-overlay').style.display = 'block';
+                window.scrollTo(0,0);
             });
+        }
+
+        // "පෙර" සහ "මීළඟ" ලිපි වලට මාරුවීම සඳහා නව ශ්‍රිතය
+        function changeArticle(step) {
+            let index = allArticleIds.indexOf(curArticle);
+            let nextIndex = index + step;
+            if (nextIndex >= 0 && nextIndex < allArticleIds.length) {
+                openFull(allArticleIds[nextIndex]);
+            }
         }
 
         function closeDetail() { 

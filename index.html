@@ -4,115 +4,272 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ධර්ම නේත්‍රා</title>
+    
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    
     <style>
-        :root { --p: #d35400; --bg: #fffbf2; --card: #fff; --text: #2c3e50; }
-        .dark { --bg: #121212; --card: #1e1e1e; --text: #e0e0e0; }
-        * { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 80px; transition: 0.3s; }
+        :root {
+            --p-color: #d35400;
+            --bg-color: #fffbf2;
+            --card-bg: #ffffff;
+            --text-main: #2c3e50;
+            --header-bg: linear-gradient(135deg, #f39c12, #d35400);
+        }
+
+        .dark-mode {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #e0e0e0;
+            --header-bg: linear-gradient(135deg, #2c3e50, #000000);
+        }
+
+        /* ආරක්‍ෂාව (Security) - Copy, Screenshot වැලැක්වීම */
+        * {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            transition: 0.3s;
+        }
+
+        /* Header */
+        .header-box {
+            background: var(--header-bg);
+            color: white;
+            padding: 12px 15px;
+            border-radius: 0 0 25px 25px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .header-top { display: flex; justify-content: space-between; align-items: center; }
+        .app-title { font-size: 22px; font-weight: bold; margin: 0; }
+        .dark-icon { cursor: pointer; font-size: 18px; }
+        .slogan { font-size: 11px; display: block; opacity: 0.9; font-style: italic; margin-top: -2px; }
         
-        .header { background: linear-gradient(135deg, #f39c12, #d35400); color: #fff; padding: 15px; border-radius: 0 0 25px 25px; position: sticky; top: 0; z-index: 1000; text-align: center; }
-        .timer { background: rgba(255,255,255,0.2); border-radius: 10px; padding: 5px; margin: 8px 0; font-size: 13px; }
-        .dt-row { display: flex; justify-content: space-between; font-size: 10px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 5px; }
+        .meditation-bar {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 4px 10px;
+            border-radius: 12px;
+            margin-top: 8px;
+            text-align: center;
+            font-size: 13px;
+        }
+        .timer-ctrl { background: white; color: var(--p-color); border: none; padding: 2px 8px; border-radius: 8px; font-size: 10px; margin-left: 5px; font-weight: bold; }
 
-        .section { display: none; padding: 15px; animation: up 0.3s; }
-        .active { display: block; }
-        @keyframes up { from { transform: translateY(10px); opacity: 0; } to { transform: 0; opacity: 1; } }
+        .time-date-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            margin-top: 8px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            padding-top: 5px;
+        }
 
-        .card { background: var(--card); border-radius: 18px; padding: 18px; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-left: 6px solid var(--p); position: relative; }
-        .card h3 { color: var(--p); margin: 0 0 8px; font-size: 17px; }
-        .heart { position: absolute; right: 15px; top: 18px; font-size: 20px; color: #ddd; }
-        .heart.on { color: #e74c3c; }
+        /* View Control - පිටු පාලනය */
+        .view-section { display: none; padding: 15px; padding-bottom: 90px; min-height: 80vh; }
+        .active-view { display: block; animation: slideUp 0.3s ease-out; }
+        @keyframes slideUp { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        #detail { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 2000; overflow-y: auto; padding: 20px; box-sizing: border-box; }
-        .content-body { font-size: 19px; line-height: 2.1; text-align: justify; white-space: pre-wrap; }
+        /* Article Cards */
+        .card {
+            background: var(--card-bg);
+            border-radius: 18px;
+            padding: 18px;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-left: 6px solid var(--p-color);
+            position: relative;
+        }
+        .card h3 { color: var(--p-color); margin: 0 0 8px; font-size: 17px; line-height: 1.4; padding-right: 30px; }
+        .card p { color: var(--text-main); opacity: 0.8; font-size: 14px; line-height: 1.5; margin: 0; }
+        .heart-icon { position: absolute; right: 15px; top: 18px; font-size: 20px; color: #ddd; cursor: pointer; }
+        .heart-icon.fav-on { color: #e74c3c; }
+        .read-status { font-size: 9px; background: #27ae60; color: white; padding: 2px 7px; border-radius: 10px; margin-left: 8px; font-weight: bold; vertical-align: middle; }
 
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #eee; box-shadow: 0 -4px 15px rgba(0,0,0,0.05); }
-        .nav-item { text-align: center; color: #888; font-size: 9px; flex: 1; cursor: pointer; }
-        .nav-item.on { color: var(--p); font-weight: bold; }
-        
-        .bank-table { width: 100%; border-collapse: collapse; background: #fff; color: #333; border-radius: 12px; overflow: hidden; margin-top: 15px; }
-        .bank-table td { padding: 12px; border: 1px solid #eee; }
-        .lbl { background: #fff8f0; font-weight: bold; color: var(--p); width: 40%; }
+        /* Detail Page */
+        #detail-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-color);
+            z-index: 2000;
+            overflow-y: auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .control-panel { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: var(--card-bg); padding: 10px; border-radius: 15px; }
+        .audio-btn { background: #9b59b6; color: white; border: none; padding: 8px 15px; border-radius: 20px; font-size: 13px; }
+        .article-text { font-size: 18px; line-height: 2.1; text-align: justify; white-space: pre-wrap; color: var(--text-main); }
+
+        /* Bank Chart */
+        .chart { width: 100%; border-collapse: collapse; margin-top: 15px; border-radius: 12px; overflow: hidden; background: white; }
+        .chart td { padding: 15px; border: 1px solid #f1f1f1; font-size: 14px; color: #333; }
+        .c-label { background: #fff8f0; color: var(--p-color); font-weight: bold; width: 35%; }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: var(--card-bg);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 1px solid #eee;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
+            z-index: 1500;
+        }
+        .nav-item { text-align: center; color: #888; font-size: 10px; flex: 1; cursor: pointer; }
+        .nav-item.active { color: var(--p-color); font-weight: bold; }
+        .nav-item i { font-size: 20px; display: block; margin-bottom: 2px; }
+
+        /* Ping Potha Form */
+        .merit-box { background: var(--card-bg); padding: 20px; border-radius: 20px; margin-bottom: 15px; }
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; border: 1px solid #ddd; box-sizing: border-box; font-family: inherit; }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
-    <div class="header">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <b style="font-size:22px;">ධර්ම නේත්‍රා</b>
-            <span onclick="document.body.classList.toggle('dark')">🌓</span>
+    <div class="header-box">
+        <div class="header-top">
+            <h1 class="app-title">ධර්ම නේත්‍රා</h1>
+            <div class="dark-icon" onclick="toggleDark()">🌓</div>
         </div>
-        <small>"ප්‍රඥාවේ ආලෝකය පතුරුවන සදහම් අවකාශය"</small>
-        <div class="timer">🧘 භාවනා කාලය: <b id="tm">00:00:00</b></div>
-        <div class="dt-row"><span id="st"></span> <span id="sd"></span></div>
-    </div>
-
-    <div id="v-home" class="section active"><div id="list">පූරණය වේ...</div></div>
-    
-    <div id="v-fav" class="section"><h2 style="color:var(--p)">❤️ ප්‍රියතම ලිපි</h2><div id="fl"></div></div>
-
-    <div id="v-merit" class="section">
-        <h3>📝 පිං පොත</h3>
-        <input type="date" id="md" style="width:100%; padding:10px; margin-bottom:10px;">
-        <textarea id="mt" style="width:100%; height:100px; padding:10px;" placeholder="පිංකම ලියන්න..."></textarea>
-        <button onclick="addM()" style="width:100%; background:var(--p); color:#fff; padding:12px; border:none; border-radius:10px;">සටහන් කරන්න</button>
-        <div id="ml" style="margin-top:20px;"></div>
-    </div>
-
-    <div id="v-donate" class="section">
-        <h3 style="color:var(--p)">🙏 පින්කමට දායක වන්න</h3>
-        <p style="font-size:14px; text-align:justify;">මෙම ධර්ම නේත්‍රා සේවාව පවත්වාගෙන යාම සඳහා සහ නඩත්තු කටයුතු සඳහා විශාල වූ මුදලක් වැය වන අතර, යෙදුම යාවත්කාලීන කිරීම, දත්ත පද්ධති පවත්වාගෙන යාම, දියුණු කිරීම් සහ පවත්වාගෙන යාම ආදී දෑ වෙනුවෙන් ඔබ ලබා දෙන සහයෝගය උතුම් ධර්ම දානයකි. අඛණ්ඩව මෙම සේවාව පවත්වාගෙන යාමට පින්වත් ඔබත් හැකි අයුරින් දායක වෙන්න.</p>
-        <table class="bank-table">
-            <tr><td class="lbl">ගිණුම</td><td>89862879</td></tr>
-            <tr><td class="lbl">නම</td><td>A Udara Sandaruwan</td></tr>
-            <tr><td class="lbl">බැංකුව</td><td>BOC</td></tr>
-            <tr><td class="lbl">ශාඛාව</td><td>Kiriella</td></tr>
-        </table>
-        <br><center><a href="https://wa.me/94763861339" style="text-decoration:none; background:#25D366; color:#fff; padding:10px 20px; border-radius:20px; font-weight:bold;">💬 රිසිට්පත එවන්න</a></center>
-    </div>
-
-    <div id="v-contact" class="section">
-        <div class="card">
-            <b>ගෞරවණීය ස්වාමින් වහන්සේ</b><br>
-            <a href="https://wa.me/94778803779" style="text-decoration:none; color:#25D366;">💬 +94 77 880 3779 (WhatsApp)</a><br>
-            <small style="color:#e67e22;">⚠️ ඇමතුම් ගැනීමෙන් වළකින්න.</small>
+        <span class="slogan">"ප්‍රඥාවේ ආලෝකය පතුරුවන සදහම් අවකාශය"</span>
+        
+        <div class="meditation-bar">
+            🧘 භාවනා කාලය: <b id="timer-val">00:00:00</b>
+            <button class="timer-ctrl" onclick="controlTimer()" id="timer-btn">අරඹන්න</button>
         </div>
-        <div class="card"><b>තාක්ෂණික සහය</b><br><a href="https://wa.me/94763861339" style="text-decoration:none; color:#34495e;">💬 +94 76 386 1339</a></div>
-    </div>
 
-    <div id="v-about" class="section">
-        <h3 style="color:var(--p)">අප ගැන</h3>
-        <p style="text-align:justify; font-size:15px; line-height:1.7;"><b>පූජ්‍යපාද අංහෙට්ටිගම සුගතානන්ද ස්වාමීන් වහන්සේ</b>යනු මූලික පිරිවෙන් අධ්‍යාපනය හදාරා, උසස් අධ්‍යාපන කටයුතු ලෙස ප්‍රාචීන භාෂා අධ්‍යාපනය නිම කළ, ත්‍රිපිටක ධර්මය පිළිබඳව මනා අධ්‍යාපනයක් ලද, තොරතුරු තාක්ෂණවේදය පිළිබඳව කාම්බෝජයේ PSB විශ්ව විද්‍යාලය මඟින් ඩිප්ලෝමා සහතිකලාභී, තරුණ ස්වාමින් වහන්සේ නමකි. ගෞරවණීය ස්වාමින් වහන්සේගේ පූර්ණ අනුමැතිය සහ අවසරයට යටත්ව GMU STUDIO (PVT) LTD. ආයතනයේ තාක්ෂණික කණ්ඩායක විසින් මෙම යෙදුම නිර්මාණය කොට පවත්වා ගෙන යනු ලැබේ.</p>
-    </div>
-
-    <div id="detail">
-        <button onclick="document.getElementById('detail').style.display='none'; synth.cancel();" style="background:#34495e; color:#fff; border:none; padding:8px 15px; border-radius:8px;">⬅ ආපසු</button>
-        <div style="float:right;">
-            <button onclick="z(2)" style="padding:5px 10px;">A+</button>
-            <button onclick="aud()" style="background:#9b59b6; color:#fff; border:none; padding:5px 10px; border-radius:10px;">🔊 ශ්‍රවණය</button>
+        <div class="time-date-row">
+            <span id="si-time">⏱ පූරණය වේ...</span>
+            <span id="si-date">📅 පූරණය වේ...</span>
         </div>
-        <h2 id="dt" style="color:var(--p); clear:both; margin-top:20px;"></h2>
-        <div id="dc" class="content-body"></div>
-        <hr>
-        <div style="text-align:center; padding:20px; background:#f9f9f9; border-radius:15px;">
-            <p style="font-size:14px;">ලිපිය පිළිබඳ විමසීමට:</p>
-            <a id="wl" href="#" style="font-size:30px; text-decoration:none; margin:10px;">🟢</a>
-            <a id="ml" href="#" style="font-size:30px; text-decoration:none; margin:10px;">🔴</a>
+    </div>
+
+    <div id="view-home" class="view-section active-view">
+        <div id="article-list">
+            <p style="text-align:center; opacity:0.5; margin-top:50px;">සදහම් ලිපි පූරණය වෙමින් පවතී...</p>
+        </div>
+    </div>
+
+    <div id="view-fav" class="view-section">
+        <h2 style="color:var(--p-color); margin-top:0;">❤️ ප්‍රියතම ලිපි</h2>
+        <div id="fav-list">
+            <p style="text-align:center; opacity:0.5;">තවමත් ප්‍රියතම ලිපි නැත.</p>
+        </div>
+    </div>
+
+    <div id="view-donate" class="view-section">
+        <div class="merit-box">
+            <h2 style="color:var(--p-color); text-align:center; margin-top:0;">පින්කමට දායක වන්න</h2>
+            <p style="text-align: justify; line-height: 1.7; font-size: 15px;">ධර්ම නේත්‍රා සදහම් සේවාව ලොව පුරා විසිරී සිටින සැදැහැවතුන් වෙත අඛණ්ඩව සහ නොමිලේ සමීප කරවීම සඳහා මෙම ජංගම යෙදුම නඩත්තු කිරීම සහ එහි නවීකරණ කටයුතු සිදු කිරීමට විශාල පිරිවැයක් වැය වේ. මෙම උතුම් ධර්ම ප්‍රචාරක කටයුත්තට ඔබගේ ශක්ති ප්‍රමාණයෙන් දායක වීම මහා පින්කමකි.</p>
+            
+            <table class="chart">
+                <tr><td class="c-label">ගිණුම් අංකය</td><td>89862879</td></tr>
+                <tr><td class="c-label">හිමිකරු</td><td>A Udara Sandaruwan</td></tr>
+                <tr><td class="c-label">බැංකුව</td><td>Bank of Ceylon (BOC)</td></tr>
+                <tr><td class="c-label">ශාඛාව</td><td>Kiriella Branch</td></tr>
+            </table>
+
+            <div style="text-align:center; margin-top:25px;">
+                <p style="font-size:13px; font-weight:bold;">රිසිට්පත යොමු කිරීම සඳහා:</p>
+                <a href="https://wa.me/94763861339?text=පින්කම සඳහා ලබා දුන් ආධාරයේ රිසිට්පතයි:" style="text-decoration:none; background:#25D366; color:white; padding:12px 25px; border-radius:30px; display:inline-flex; align-items:center; gap:10px; font-weight:bold;">
+                    <span style="font-size:20px;">💬</span> WhatsApp එවන්න
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-contact" class="view-section">
+        <div class="card" style="border:none;">
+            <h3>🙏 ගෞරවණීය ස්වාමින් වහන්සේ</h3>
+            <p style="color:#e67e22; font-weight:bold; margin-bottom:10px;">⚠️ කරුණාකර දුරකථන ඇමතුම් ලබා ගැනීමෙන් වළකින්න.</p>
+            <a href="https://wa.me/94778803779" style="text-decoration:none; color:#25D366; font-weight:bold; font-size:18px;">💬 +94 77 880 3779 (WhatsApp)</a>
+            <p style="margin-top:15px; font-size:13px;">📧 anhettigamapodihamuduruwo@gmail.com</p>
+        </div>
+        <div class="card" style="border:none;">
+            <h3>⚙️ තාක්ෂණික කණ්ඩායම</h3>
+            <p>යෙදුමෙහි තාක්ෂණික ගැටළු සඳහා සම්බන්ධ වන්න:</p>
+            <a href="https://wa.me/94763861339" style="text-decoration:none; color:#34495e; font-weight:bold; font-size:18px;">💬 +94 76 386 1339 (WhatsApp)</a>
+        </div>
+    </div>
+
+    <div id="view-about" class="view-section">
+        <div class="merit-box">
+            <h2 style="color:var(--p-color); text-align:center; margin-top:0;">අප ගැන</h2>
+            <div style="text-align: justify; line-height: 1.8; font-size: 15px;">
+                <p><b>පූජ්‍යපාද අංහෙට්ටිගම සුගතානන්ද ස්වාමීන් වහන්සේ</b> යනු මූලික පිරිවෙන් අධ්‍යාපනය, ප්‍රාචීන භාෂා අධ්‍යාපනය සහ ත්‍රිපිටක ධර්ම අධ්‍යාපනය මැනවින් හදාරා ඇති ගෞරවනීය ස්වාමීන් වහන්සේ නමකි. උන්වහන්සේ ලේඛන කලාවෙහි මෙන්ම තොරතුරු තාක්ෂණවේදය (Diploma in Information Technology) පිළිබඳවද හසල දැනුමක් ඇති තරුණ යතිවරයාණන් වහන්සේ නමකි.</p>
+                <p>ගෞරවණීය ස්වාමින් වහන්සේගේ පූර්ණ අවසරය සහ මඟ පෙන්වීම යටතේ <b>GMU STUDIO (PVT) LTD</b> ආයතනය විසින් මෙම "ධර්ම නේත්‍රා" යෙදුම නිර්මාණය කොට පවත්වා ගෙන යනු ලබයි. අපගේ අරමුණ නූතන තාක්ෂණය හරහා පිරිසිදු ශ්‍රී සද්ධර්මය ලොව පුරා ප්‍රචලිත කිරීමයි.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-merit" class="view-section">
+        <div class="merit-box">
+            <h3 style="color:var(--p-color); margin-top:0;">📝 පිං පොත</h3>
+            <input type="date" id="merit-date">
+            <textarea id="merit-text" placeholder="අද සිදුකළ උතුම් පිංකම් මෙතැන ලියන්න..."></textarea>
+            <button style="background:var(--p-color); color:white; border:none; padding:12px; width:100%; border-radius:10px; font-weight:bold;" onclick="addMerit()">පිං පොතට එක් කරන්න</button>
+        </div>
+        <div id="merit-list-container"></div>
+    </div>
+
+    <div id="detail-overlay">
+        <div class="control-panel">
+            <button onclick="closeDetail()" style="background:#34495e; color:white; border:none; padding:8px 15px; border-radius:10px;">⬅ ආපසු</button>
+            <div style="display:flex; gap:5px;">
+                <button onclick="zoom(2)" style="border:none; padding:8px 12px; border-radius:8px;">A+</button>
+                <button onclick="zoom(-2)" style="border:none; padding:8px 12px; border-radius:8px;">A-</button>
+            </div>
+            <button class="audio-btn" id="listen-btn" onclick="toggleAudio()">🔊 ශ්‍රවණය</button>
+        </div>
+        
+        <h2 id="full-title" style="color:var(--p-color); line-height:1.4;"></h2>
+        <div id="full-content" class="article-text"></div>
+
+        <div style="margin-top:40px; padding:20px; background:var(--card-bg); border-radius:20px; text-align:center; border:1px solid #eee;">
+            <p style="font-weight:bold; margin-bottom:15px;">ලිපිය පිළිබඳව විමසීමට:</p>
+            <div style="display:flex; justify-content:center; gap:25px;">
+                <a id="wa-inquiry" href="#" style="text-decoration:none; font-size:35px;">🟢</a>
+                <a id="mail-inquiry" href="#" style="text-decoration:none; font-size:35px;">🔴</a>
+            </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; margin-top:30px; margin-bottom:50px;">
+            <button style="background:#7f8c8d; color:white; border:none; padding:10px 20px; border-radius:20px;" onclick="closeDetail()">මුල් පිටුවට</button>
+            <div style="display:flex; gap:10px;">
+                <button style="background:var(--p-color); color:white; border:none; padding:10px 20px; border-radius:20px;">⬅ පෙර</button>
+                <button style="background:var(--p-color); color:white; border:none; padding:10px 20px; border-radius:20px;">මීළඟ ➡</button>
+            </div>
         </div>
     </div>
 
     <div class="bottom-nav">
-        <div class="nav-item on" onclick="nav('home')">🏠<br>මුල</div>
-        <div class="nav-item" onclick="nav('fav')">❤️<br>ප්‍රියතම</div>
-        <div class="nav-item" onclick="nav('merit')">📖<br>පිං පොත</div>
-        <div class="nav-item" onclick="nav('donate')">🙏<br>ආධාර</div>
-        <div class="nav-item" onclick="nav('contact')">📞<br>සම්බන්ධතා</div>
-        <div class="nav-item" onclick="nav('about')">ℹ️<br>අප ගැන</div>
+        <div class="nav-item active" onclick="nav('home')"><i>🏠</i>මුල</div>
+        <div class="nav-item" onclick="nav('fav')"><i>❤️</i>ප්‍රියතම</div>
+        <div class="nav-item" onclick="nav('merit')"><i>📖</i>පිං පොත</div>
+        <div class="nav-item" onclick="nav('donate')"><i>🙏</i>ආධාර</div>
+        <div class="nav-item" onclick="nav('contact')"><i>📞</i>සම්බන්ධතා</div>
+        <div class="nav-item" onclick="nav('about')"><i>ℹ️</i>අප ගැන</div>
     </div>
 
     <script>
+        // --- Firebase Configuration ---
         const firebaseConfig = {
             apiKey: "AIzaSyDEiwhtAIdoqdMIV5n_bdDoKuIrCkjqr3M",
             authDomain: "dharma-nethra.firebaseapp.com",
@@ -125,75 +282,171 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        let favs = JSON.parse(localStorage.getItem('f') || '[]');
-        let reads = JSON.parse(localStorage.getItem('r') || '[]');
+        // App States
+        let favs = JSON.parse(localStorage.getItem('myFavs') || '[]');
+        let readList = JSON.parse(localStorage.getItem('myReads') || '[]');
+        let timerActive = false;
+        let timeCount = 0;
+        let timerPtr;
         let synth = window.speechSynthesis;
+        let curArticle = "";
 
-        function update() {
-            const n = new Date();
-            document.getElementById('st').innerText = "⏱ " + n.toLocaleTimeString('si-LK', {hour12:true, hour:'2-digit', minute:'2-digit'});
-            document.getElementById('sd').innerText = "📅 " + n.toLocaleDateString('si-LK', {year:'numeric', month:'long', day:'numeric'});
+        // Clock Logic
+        function updateClock() {
+            const now = new Date();
+            const time = now.toLocaleTimeString('si-LK', { hour12: true, hour: '2-digit', minute: '2-digit' });
+            const date = now.toLocaleDateString('si-LK', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+            document.getElementById('si-time').innerText = "⏱ " + time;
+            document.getElementById('si-date').innerText = "📅 " + date;
         }
-        setInterval(update, 1000); update();
+        setInterval(updateClock, 1000);
+        updateClock();
 
-        let sec = 0;
-        setInterval(() => {
-            sec++;
-            let h=Math.floor(sec/3600).toString().padStart(2,'0'), m=Math.floor((sec%3600)/60).toString().padStart(2,'0'), s=(sec%60).toString().padStart(2,'0');
-            document.getElementById('tm').innerText = `${h}:${m}:${s}`;
-        }, 1000);
+        // Timer Logic
+        function controlTimer() {
+            if(!timerActive) {
+                timerActive = true;
+                document.getElementById('timer-btn').innerText = "නවතන්න";
+                timerPtr = setInterval(() => {
+                    timeCount++;
+                    let h = Math.floor(timeCount/3600).toString().padStart(2,'0');
+                    let m = Math.floor((timeCount%3600)/60).toString().padStart(2,'0');
+                    let s = (timeCount%60).toString().padStart(2,'0');
+                    document.getElementById('timer-val').innerText = `${h}:${m}:${s}`;
+                }, 1000);
+            } else {
+                timerActive = false;
+                document.getElementById('timer-btn').innerText = "අරඹන්න";
+                clearInterval(timerPtr);
+            }
+        }
 
-        db.ref('articles').on('value', (s) => {
-            const l = document.getElementById('list'); l.innerHTML = '';
-            s.forEach((c) => {
-                const a = c.val(), id = c.key;
-                const isF = favs.includes(id) ? 'on' : '';
-                const isR = reads.includes(id) ? '<span style="font-size:9px; background:#27ae60; color:#fff; padding:2px 5px; border-radius:5px; margin-left:5px;">කියවන ලදී</span>' : '';
-                l.innerHTML += `<div class="card"><span class="heart ${isF}" onclick="f('${id}',event)">❤</span><div onclick="o('${id}')"><h3>${a.title} ${isR}</h3><p>${a.content.substring(0,100)}...</p></div></div>`;
+        // Article Loading
+        db.ref('articles').on('value', (snap) => {
+            const list = document.getElementById('article-list');
+            list.innerHTML = '';
+            snap.forEach((child) => {
+                const a = child.val();
+                const id = child.key;
+                const isFav = favs.includes(id) ? 'fav-on' : '';
+                const isRead = readList.includes(id) ? '<span class="read-status">කියවන ලදී</span>' : '';
+                
+                list.innerHTML += `
+                    <div class="card">
+                        <span class="heart-icon ${isFav}" onclick="doFav('${id}', event)">❤</span>
+                        <div onclick="openFull('${id}')">
+                            <h3>${a.title} ${isRead}</h3>
+                            <p>${a.content.substring(0,100)}...</p>
+                        </div>
+                    </div>
+                `;
             });
         });
 
-        function nav(v) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById('v-'+v).classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('on'));
-            event.currentTarget.classList.add('on');
-            if(v==='merit') showM();
-            if(v==='fav') showF();
+        // Navigation
+        function nav(view) {
+            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active-view'));
+            document.getElementById('view-' + view).classList.add('active-view');
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            if(view === 'merit') showMerits();
+            if(view === 'fav') showFavs();
             window.scrollTo(0,0);
         }
 
-        function o(id) {
-            db.ref('articles/'+id).once('value').then(s => {
-                const a = s.val();
-                document.getElementById('dt').innerText = a.title;
-                document.getElementById('dc').innerText = a.content;
-                document.getElementById('wl').href = `https://wa.me/94778803779?text=ගෞරවනීය ස්වාමින් වහන්ස, '${a.title}' ලිපිය පිළිබඳවයි:`;
-                document.getElementById('ml').href = `mailto:anhettigamapodihamuduruwo@gmail.com?subject=විමසීම&body='${a.title}' පිළිබඳවයි:`;
-                if(!reads.includes(id)) { reads.push(id); localStorage.setItem('r', JSON.stringify(reads)); }
-                document.getElementById('detail').style.display = 'block';
+        // Full Article
+        function openFull(id) {
+            db.ref('articles/' + id).once('value').then(snap => {
+                const a = snap.val();
+                document.getElementById('full-title').innerText = a.title;
+                document.getElementById('full-content').innerText = a.content;
+                
+                // Inquiry links
+                document.getElementById('wa-inquiry').href = `https://wa.me/94778803779?text=ගෞරවනීය ස්වාමින් වහන්ස, '${a.title}' ලිපිය පිළිබඳවයි:`;
+                document.getElementById('mail-inquiry').href = `mailto:anhettigamapodihamuduruwo@gmail.com?subject=ලිපිය පිළිබඳ විමසීම&body=ගෞරවනීය ස්වාමින් වහන්ස, '${a.title}' ලිපිය පිළිබඳවයි:`;
+
+                if(!readList.includes(id)) {
+                    readList.push(id);
+                    localStorage.setItem('myReads', JSON.stringify(readList));
+                }
+                document.getElementById('detail-overlay').style.display = 'block';
             });
         }
 
-        function f(id,e) { e.stopPropagation(); if(favs.includes(id)) favs=favs.filter(i=>i!==id); else favs.push(id); localStorage.setItem('f', JSON.stringify(favs)); location.reload(); }
-
-        function addM() {
-            const d = document.getElementById('md').value, t = document.getElementById('mt').value;
-            if(d && t) { let m = JSON.parse(localStorage.getItem('m') || '[]'); m.push({d,t}); localStorage.setItem('m', JSON.stringify(m)); showM(); }
+        function closeDetail() { 
+            document.getElementById('detail-overlay').style.display = 'none'; 
+            synth.cancel();
+            document.getElementById('listen-btn').innerText = "🔊 ශ්‍රවණය";
         }
 
-        function showM() {
-            let m = JSON.parse(localStorage.getItem('m') || '[]');
-            document.getElementById('ml').innerHTML = m.reverse().map(i => `<div style="background:#eafaf1; padding:10px; border-radius:10px; margin-bottom:10px;"><b>${i.d}</b><br>${i.t}</div>`).join('');
+        // Favorites
+        function doFav(id, e) {
+            e.stopPropagation();
+            if(favs.includes(id)) favs = favs.filter(i => i !== id);
+            else favs.push(id);
+            localStorage.setItem('myFavs', JSON.stringify(favs));
+            location.reload();
         }
 
-        function showF() {
-            const l = document.getElementById('fl'); l.innerHTML = '';
-            favs.forEach(id => { db.ref('articles/'+id).once('value').then(s => { const a = s.val(); l.innerHTML += `<div class="card" onclick="o('${id}')"><h3>${a.title}</h3><p>${a.content.substring(0,100)}...</p></div>`; }); });
+        function showFavs() {
+            const list = document.getElementById('fav-list');
+            list.innerHTML = '';
+            if(favs.length === 0) { list.innerHTML = '<p style="text-align:center; opacity:0.5;">තවමත් ප්‍රියතම ලිපි නැත.</p>'; return; }
+            favs.forEach(id => {
+                db.ref('articles/' + id).once('value').then(s => {
+                    const a = s.val();
+                    list.innerHTML += `<div class="card" onclick="openFull('${id}')"><h3>${a.title}</h3><p>${a.content.substring(0,100)}...</p></div>`;
+                });
+            });
         }
 
-        let fs = 19; function z(v) { fs += v; document.getElementById('dc').style.fontSize = fs + 'px'; }
-        function aud() { if(synth.speaking) synth.cancel(); else { let u = new SpeechSynthesisUtterance(document.getElementById('dc').innerText); u.lang='si-LK'; synth.speak(u); } }
+        // Merit Book
+        function addMerit() {
+            const date = document.getElementById('merit-date').value;
+            const text = document.getElementById('merit-text').value;
+            if(date && text) {
+                let m = JSON.parse(localStorage.getItem('myMerits') || '[]');
+                m.push({date, text});
+                localStorage.setItem('myMerits', JSON.stringify(m));
+                document.getElementById('merit-text').value = '';
+                showMerits();
+            }
+        }
+
+        function showMerits() {
+            const div = document.getElementById('merit-list-container');
+            let m = JSON.parse(localStorage.getItem('myMerits') || '[]');
+            div.innerHTML = m.reverse().map(i => `<div style="background:#eafaf1; padding:15px; border-radius:15px; margin-bottom:10px; border-left:4px solid #2ecc71; color:#2c3e50;"><b>${i.date}</b><br>${i.text}</div>`).join('');
+        }
+
+        // UI Extras
+        function toggleDark() { document.body.classList.toggle('dark-mode'); }
+        
+        let fSize = 18;
+        function zoom(v) {
+            fSize += v;
+            document.getElementById('full-content').style.fontSize = fSize + 'px';
+        }
+
+        function toggleAudio() {
+            if(synth.speaking) {
+                synth.cancel();
+                document.getElementById('listen-btn').innerText = "🔊 ශ්‍රවණය";
+            } else {
+                let utter = new SpeechSynthesisUtterance(document.getElementById('full-content').innerText);
+                utter.lang = 'si-LK';
+                synth.speak(utter);
+                document.getElementById('listen-btn').innerText = "🛑 නවතන්න";
+            }
+        }
+
+        // Anti-Screenshot / Key block
+        document.addEventListener('keydown', (e) => {
+            if(e.key === "PrintScreen" || (e.ctrlKey && (e.key === 'p' || e.key === 's'))) {
+                e.preventDefault();
+                alert("ආරක්‍ෂිත හේතූන් මත මෙය අවහිර කර ඇත.");
+            }
+        });
     </script>
 </body>
 </html>

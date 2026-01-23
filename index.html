@@ -2,253 +2,118 @@
 <html lang="si">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<link rel="manifest" href="manifest.json">
-    <title>ධර්ම නේත්‍රා - Dharma Nethra</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ධර්ම නේත්‍රා</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     <style>
-        :root {
-            --primary: #d35400; --secondary: #f39c12; --accent: #8e44ad; --success: #27ae60; --danger: #e74c3c;
-            --bg: #fffbf2; --card: #ffffff; --text: #333333; --shadow: 0 2px 8px rgba(0,0,0,0.04);
-            --header-bg: linear-gradient(135deg, #f1c40f, #e67e22, #d35400);
-        }
-        .dark-mode {
-            --bg: #121212; --text: #e0e0e0; --card: #1e1e1e; --shadow: 0 4px 12px rgba(0,0,0,0.4);
-            --header-bg: linear-gradient(135deg, #7d5a00, #a04000);
-        }
-        * { user-select: none; box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Noto Sans Sinhala', 'Poppins', sans-serif; }
-        body { background-color: var(--bg); color: var(--text); transition: 0.3s ease; margin: 0; padding-bottom: 90px; }
+        :root { --p-color: #d35400; --bg-color: #fffbf2; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-color); margin: 0; padding-bottom: 80px; }
+        .header { background: var(--p-color); color: white; padding: 15px; text-align: center; font-size: 20px; font-weight: bold; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .container { padding: 15px; }
+        .card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer; border-left: 5px solid var(--p-color); position: relative; }
+        .card h3 { margin: 0 0 8px; color: var(--p-color); font-size: 17px; line-height: 1.4; padding-right: 25px; }
+        .card p { margin: 0; color: #666; font-size: 14px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        .card .badge { position: absolute; right: 10px; top: 10px; background: #27ae60; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; }
         
-        /* --- Header with CORRECT Embedded Lotus Icon --- */
-        .header { 
-            background: var(--header-bg); padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; 
-            color: white; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow);
-            border-bottom-left-radius: 18px; border-bottom-right-radius: 18px;
-        }
-        .header-left { display: flex; align-items: center; }
-        /* CORRECT Lotus SVG Data */
-        .lotus-icon { width: 30px; height: 30px; margin-right: 8px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23ffffff' d='M256 0c-35.3 0-64 28.7-64 64 0 35.3 28.7 64 64 64s64-28.7 64-64c0-35.3-28.7-64-64-64zm0 160c-53 0-96 43-96 96 0 34.6 18.3 64.9 46 81.8-5.5 10.4-14.2 25.8-26 46.2H136c-13.3 0-24 10.7-24 24s10.7 24 24 24h32c0 44.2 39.4 80 88 80s88-35.8 88-80h32c13.3 0 24-10.7 24-24s-10.7-24-24-24h-44c-11.8-20.4-20.5-35.8-26-46.2 27.7-16.9 46-47.2 46-81.8 0-53-43-96-96-96zM160 256c0-28.3 17.6-52.3 42.3-63.4.9 10.2 3.8 22.7 9.7 40.4-29.9 5.3-52 31.3-52 62.4v-39.4zm96 64c-17.7 0-32-14.3-32-32 0-14.7 9.9-27.1 23.5-30.9 5.1 15 11.2 32.3 16.5 47.9-2.6.7-5.3 1.1-8 1.1zm8-62.9c5.3-15.6 11.4-32.9 16.5-47.9 13.6 3.8 23.5 16.2 23.5 30.9 0 17.7-14.3 32-32 32-2.7 0-5.4-.4-8-1.1zm42.3 39.9c5.9-17.7 8.8-30.2 9.7-40.4 24.7 11.1 42.3 35.1 42.3 63.4v39.4c0-31.1-22.1-57.1-52-62.4z'/%3E%3C/svg%3E"); background-size: cover; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
-        .app-title { font-size: 20px; font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-        .header-icons span { font-size: 18px; margin-left: 12px; cursor: pointer; }
+        /* Detail View Styles */
+        #detail-view { display: none; background: white; min-height: 100vh; position: fixed; top: 0; width: 100%; z-index: 2000; overflow-y: auto; padding: 20px; box-sizing: border-box; }
+        .back-btn { background: #34495e; color: white; border: none; padding: 10px 18px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; display: flex; align-items: center; }
+        .article-title { color: var(--p-color); font-size: 22px; margin-bottom: 15px; line-height: 1.4; }
+        .article-content { font-size: 18px; line-height: 1.8; color: #2c3e50; white-space: pre-wrap; margin-top: 20px; }
+        .share-container { display: flex; gap: 10px; margin: 20px 0; border-top: 1px solid #eee; padding-top: 20px; }
+        .share-btn { flex: 1; border: none; padding: 12px; border-radius: 25px; color: white; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 5px; }
 
-        .date-strip { background: var(--card); color: var(--primary); text-align: center; padding: 5px; font-size: 10px; font-weight: 700; margin: 8px auto; width: 85%; border-radius: 10px; box-shadow: var(--shadow); border: 1px solid rgba(211, 84, 0, 0.1); }
-        .container { padding: 5px 10px; max-width: 700px; margin: auto; }
-        
-        /* --- Ultra-Compact Article Cards (Reduced Size) --- */
-        .article-card { 
-            background: var(--card); padding: 8px 10px; border-radius: 12px; margin-bottom: 8px; 
-            box-shadow: var(--shadow); position: relative; border: none;
-        }
-        .title { font-size: 15px; font-weight: 700; color: var(--primary); margin-bottom: 2px; line-height: 1.2; display: flex; align-items: center; }
-        .title::before { content: '☸'; color: var(--secondary); margin-right: 6px; font-size: 15px; }
-        .snippet { font-size: 12px; line-height: 1.3; opacity: 0.8; margin-top: 0; }
-        .read-tag { position: absolute; top: 8px; right: 8px; background: var(--success); color: white; font-size: 8px; padding: 2px 5px; border-radius: 6px; font-weight: 700; }
-
-        /* --- UI Elements --- */
-        .btn { border: none; padding: 8px 16px; border-radius: 25px; cursor: pointer; font-weight: 700; margin: 3px; background: var(--primary); color: white; font-size: 12px; transition: 0.3s; }
-        .btn-wa { background: var(--success); } .btn-dark { background: #34495e; } .btn-danger { background: var(--danger); }
-        .section-card { background: var(--card); padding: 20px 15px; border-radius: 20px; box-shadow: var(--shadow); text-align: center; border: 1px solid rgba(0,0,0,0.03); }
-
-        .reader-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .reader-controls { display: flex; gap: 4px; background: var(--bg); padding: 3px; border-radius: 20px; }
-        .btn-mini { border: none; padding: 4px 8px; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 10px; background: var(--card); color: var(--text); border: 1px solid rgba(0,0,0,0.1); }
-        .btn-speak-mini { background: var(--accent); color: white; } .btn-stop-mini { background: var(--danger); color: white; }
-
-        .bottom-nav { 
-            position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; 
-            justify-content: space-around; padding: 6px 0; border-top-left-radius: 18px; border-top-right-radius: 18px;
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.06); z-index: 100;
-        }
-        .nav-item { font-size: 9px; cursor: pointer; opacity: 0.5; display: flex; flex-direction: column; align-items: center; color: var(--text); }
-        .nav-item.active { opacity: 1; color: var(--primary); font-weight: 700; }
-        .nav-icon { font-size: 18px; margin-bottom: 2px; }
-
-        .centered-content { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; }
-        /* CORRECT Dharma Chakra SVG Data */
-        .chakra-icon { width: 50px; height: 50px; margin-bottom: 10px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23f39c12' d='M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256 256-114.6 256-256S397.4 0 256 0zm0 469.3c-117.8 0-213.3-95.5-213.3-213.3S138.2 42.7 256 42.7 469.3 138.2 469.3 256 373.8 469.3 256 469.3zm0-384c-94.1 0-170.7 76.6-170.7 170.7S161.9 426.7 256 426.7 426.7 350.1 426.7 256 350.1 85.3 256 85.3zm0 298.7c-70.6 0-128-57.4-128-128S185.4 128 256 128s128 57.4 128 128-57.4 128-128 128zm0-213.3c-47.1 0-85.3 38.2-85.3 85.3s38.2 85.3 85.3 85.3 85.3-38.2 85.3-85.3-38.2-85.3-85.3-85.3z'/%3E%3C/svg%3E"); background-size: cover; }
-
-        .contact-pill { display: flex; align-items: center; justify-content: center; width: 100%; padding: 10px; background: var(--bg); border-radius: 15px; margin-bottom: 8px; text-decoration: none; color: var(--text); font-weight: 700; border: 1.5px solid #eee; font-size: 13px; }
-        .dark-mode .contact-pill { background: #222; border-color: #333; }
-        .contact-pill img, .contact-pill svg { width: 20px; margin-right: 10px; }
-        
-        .bank-box { background: #fffcf2; padding: 20px; border-radius: 18px; margin: 12px 0; border: 1.5px dashed #d35400; color: #333; width: 100%; }
-        .dark-mode .bank-box { background: #2c251a; color: #eee; }
-        .hidden { display: none; }
-        input, textarea { width: 100%; padding: 10px; border-radius: 12px; margin: 6px 0; background: var(--bg); color: var(--text); border: 1px solid #eee; font-size: 14px; }
+        /* Bottom Nav */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #eee; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
+        .nav-item { text-align: center; color: #888; font-size: 11px; text-decoration: none; }
+        .nav-item.active { color: var(--p-color); }
     </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
 
-<div class="header" id="app-header">
-    <div class="header-left">
-        <div class="lotus-icon"></div>
-        <div class="app-title">ධර්ම නේත්‍රා</div>
-    </div>
-    <div class="header-icons">
-        <span onclick="toggleDarkMode()">🌙</span>
-        <span>🔔</span>
-    </div>
-</div>
-
-<div class="date-strip">
-    <span id="clock">00:00:00</span> | <span id="date">පූරණය වේ...</span>
-</div>
-
-<div class="container" id="main-content">
-    
-    <div id="page-home">
-        <div id="article-list">
-            <p style="text-align:center; padding: 40px; opacity: 0.5; font-size: 14px;">සද්ධර්මය පූරණය වෙමින් පවතී...</p>
+    <div id="home-view">
+        <div class="header">ධර්ම නේත්‍රා</div>
+        <div class="container" id="article-list">
+            <p style="text-align:center;">සදහම් ලිපි පූරණය වෙමින් පවතී...</p>
         </div>
     </div>
 
-    <div id="page-reader" class="hidden">
-        <div class="section-card" style="text-align: left; padding: 15px;">
-            <div class="reader-top-bar">
-                <button class="btn btn-dark" style="padding: 5px 10px; font-size: 10px; margin:0;" onclick="showPage('page-home')">⬅️ ආපසු</button>
-                <div class="reader-controls">
-                    <button class="btn-mini" onclick="changeSize(2)">A+</button>
-                    <button class="btn-mini" onclick="changeSize(-2)">A-</button>
-                    <button id="speak-btn" class="btn-mini btn-speak-mini" onclick="readArt()">🔊 ශ්‍රවණය</button>
-                    <button id="stop-btn" class="btn-mini btn-stop-mini hidden" onclick="stopArt()">🛑 නවත්වන්න</button>
-                </div>
-            </div>
-            <h2 id="view-title" class="title" style="font-size: 17px; margin-top: 8px;"></h2>
-            <div style="height: 2px; width: 35px; background: var(--secondary); margin: 8px 0;"></div>
-            <div id="view-content" style="line-height:1.7; text-align:justify; font-size:15px; color: var(--text);"></div>
+    <div id="detail-view">
+        <button class="back-btn" onclick="showHome()">← ආපසු</button>
+        <h2 id="detail-title" class="article-title"></h2>
+        <div id="detail-content" class="article-content"></div>
+        
+        <div class="share-container">
+            <button class="share-btn" style="background:#25D366;">WhatsApp</button>
+            <button class="share-btn" style="background:#E1473D;">Email</button>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="nav-item active">🏠<br>මුල</div>
+        <div class="nav-item">❤️<br>ප්‍රියතම</div>
+        <div class="nav-item">ℹ️<br>අප ගැන</div>
+        <div class="nav-item">🙏<br>ආධාර</div>
+    </div>
+
+    <script>
+        // --- ඔබ වහන්සේගේ Firebase Config එක මෙතැනට පේස්ට් කරන්න ---
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "dharma-nethra.firebaseapp.com",
+            databaseURL: "https://dharma-nethra-default-rtdb.firebaseio.com",
+            projectId: "dharma-nethra",
+            storageBucket: "dharma-nethra.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+        // -------------------------------------------------------
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // ලිපි ලැයිස්තුව මුල් පිටුවේ පෙන්වීම
+        db.ref('articles').on('value', (snapshot) => {
+            const listDiv = document.getElementById('article-list');
+            listDiv.innerHTML = '';
             
-            <div style="margin-top:25px; border-top:1px solid #eee; padding-top:15px; text-align:center;">
-                <button class="btn btn-wa" onclick="contactWA()">💬 WhatsApp</button>
-                <button class="btn btn-danger" onclick="contactMail()">📧 Email</button>
-            </div>
-            <div style="display:flex; justify-content: space-between; margin-top:20px;">
-                <button class="btn btn-dark" onclick="nav(-1)">⬅️ පෙර</button>
-                <button class="btn btn-dark" onclick="nav(1)">මීළඟ ➡️</button>
-            </div>
-        </div>
-    </div>
+            if (snapshot.exists()) {
+                snapshot.forEach((childSnapshot) => {
+                    const article = childSnapshot.val();
+                    const id = childSnapshot.key;
+                    listDiv.innerHTML += `
+                        <div class="card" onclick="openArticle('${id}')">
+                            <span class="badge">කියවන ලදී</span>
+                            <h3>${article.title}</h3>
+                            <p>${article.content.substring(0, 80)}...</p>
+                            <small style="color:var(--p-color); margin-top:10px; display:block;">කියවන්න තට්ටු කරන්න</small>
+                        </div>
+                    `;
+                });
+            } else {
+                listDiv.innerHTML = '<p style="text-align:center;">තවමත් ලිපි ඇතුළත් කර නැත.</p>';
+            }
+        });
 
-    <div id="page-about" class="hidden">
-        <div class="section-card centered-content">
-            <div class="chakra-icon"></div>
-            <h2 class="title" style="justify-content: center; font-size: 18px;">පූජ්‍යපාද අංහෙට්ටිගම සුගතනන්ද ස්වාමීන් වහන්සේ</h2>
-            <p style="font-weight: 700; color: var(--secondary); font-size: 13px; margin-top: -5px;">(අංහෙට්ටිගම පොඩි හාමුදුරුවෝ)</p>
-            <p style="text-align: justify; line-height: 1.6; margin-top: 15px; font-size: 14px;">
-                මූලික පිරිවෙන් අධ්‍යාපනය, ප්‍රාචීන භාෂා අධ්‍යාපනය සහ ත්‍රිපිටක ධර්ම අධ්‍යාපනය මැනවින් හදාරා ඇති ගෞරවනීය ස්වාමීන් වහන්සේ නමකි. 
-                අති ගම්භීර නිර්මල සිරි සද්ධර්මය වර්තමාන සැදැහැති ඔබ සැමට අවබෝධ කර ගත හැකි පරිදි ඉතා සරල බසින් දහම් ලිපි රචනා කරමින් උතුම් වූ ධර්ම ප්‍රචාරයේ නිරත වෙති.
-            </p>
-            <hr style="opacity: 0.1; margin: 20px 0; width: 100%;">
-            <div style="text-align: center;">
-                <h3 class="title" style="justify-content: center; font-size: 16px;">තාක්ෂණික පද්ධතිය</h3>
-                <p style="line-height: 1.6; font-size: 13px; opacity: 0.8;">
-                    <b>GMU STUDIO (PVT) LTD.</b> ආයතනයේ පළපුරුදු තාක්ෂණික කණ්ඩායම විසින් මෙම "ධර්ම නේත්‍රා" යෙදුම ගෞරවනීය ස්වාමීන් වහන්සේගේ පූර්ණ අවසරය සහ මඟපෙන්වීම යටතේ සද්ධර්මයේ ආරක්ෂාව උදෙසා පවත්වා ගෙන යනු ලැබේ.
-                </p>
-            </div>
-        </div>
-    </div>
+        // ලිපියක් තේරූ විට එය පෙන්වන ආකාරය
+        function openArticle(id) {
+            db.ref('articles/' + id).once('value').then((snapshot) => {
+                const article = snapshot.val();
+                if (article) {
+                    document.getElementById('detail-title').innerText = article.title;
+                    document.getElementById('detail-content').innerText = article.content;
+                    document.getElementById('home-view').style.display = 'none';
+                    document.getElementById('detail-view').style.display = 'block';
+                    window.scrollTo(0, 0);
+                }
+            });
+        }
 
-    <div id="page-contact" class="hidden">
-        <div class="section-card centered-content">
-            <h2 class="section-title" style="font-size: 18px; margin-bottom: 15px; color: var(--primary); font-weight: 700;">සම්බන්ධ වන්න</h2>
-            
-            <a href="https://wa.me/94778803779" class="contact-pill" style="border-color: #25D366;">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WA">
-                <span>+94 77 880 3779 (WhatsApp)</span>
-            </a>
-            <p style="color: var(--danger); font-size: 11px; font-weight: 700; margin: -5px 0 15px 0;">⚠️ ඇමතුම් ගැනීමෙන් වළකින්න.</p>
-            
-            <a href="mailto:anhettigamapodihamuduruwo@gmail.com" class="contact-pill" style="border-color: #e74c3c;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="#e74c3c" d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                <span style="font-size: 12px; margin-left: 10px;">anhettigamapodihamuduruwo@gmail.com</span>
-            </a>
-
-            <p style="font-size: 12px; opacity: 0.7; margin: 25px 0 10px 0;">තාක්ෂණික කණ්ඩායම (GMU STUDIO):</p>
-            <a href="https://wa.me/94763861339" class="contact-pill" style="border-color: var(--accent);">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WA">
-                <span>+94 76 386 1339 (WhatsApp)</span>
-            </a>
-        </div>
-    </div>
-
-    <div id="page-donate" class="hidden">
-        <div class="section-card centered-content">
-            <h2 class="section-title" style="font-size: 18px; margin-bottom: 15px; color: var(--primary); font-weight: 700;">පිංකමට දායක වන්න</h2>
-            <p style="line-height: 1.6; font-size: 14px; opacity: 0.8; margin-bottom: 15px;">
-                මෙම "ධර්ම නේත්‍රා" යෙදුම හරහා උතුම් වූ සද්ධර්මය දසත පැතිරවීමට ඔබ ලබා දෙන සහයෝගය අති මහත් වූ කුසල් රැස් කර දෙන "ධර්ම දානයකි".
-            </p>
-            
-            <div class="bank-box">
-                <h3 style="margin-top: 0; color: var(--primary); font-size: 16px; display: flex; align-items: center; justify-content: center;"><span style="margin-right: 8px;">🏛️</span> බැංකු ගිණුම් විස්තර</h3>
-                <div style="line-height: 1.7; font-size: 14px; font-weight: 600; text-align: center; display: inline-block;">
-                    බැංකුව: <b>Bank of Ceylon (BOC)</b><br>
-                    ශාඛාව: <b>Kiriella Branch (කිරිඇල්ල)</b><br>
-                    අංකය: <span style="font-size: 20px; color: var(--primary); font-weight: 800;">89862879</span><br>
-                    හිමිකරු: <b>A Udara Sandaruwan</b>
-                </div>
-            </div>
-
-            <button class="btn btn-wa" style="width: 100%; padding: 15px; font-size: 14px; display: flex; align-items: center; justify-content: center;" onclick="window.open('https://wa.me/94763861339?text=Donation Receipt')">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="20" style="margin-right: 10px;">
-                රිසිට්පත එවන්න (076 386 1339)
-            </button>
-        </div>
-    </div>
-    
-    <div id="page-merit" class="hidden">
-        <div class="section-card" style="text-align: left; padding: 15px;">
-            <h2 class="title" style="justify-content: center; font-size: 18px;">📖 පිං පොත</h2>
-            <input type="date" id="merit-date"><textarea id="merit-text" rows="3" placeholder="කළ පින්කම මෙහි සටහන් කරන්න..."></textarea>
-            <button class="btn" style="width:100%; font-size: 14px;" onclick="addMerit()">පිං පොතේ සටහන් කරන්න</button>
-        </div>
-        <div id="merit-list" style="margin-top: 10px;"></div>
-    </div>
-
-    <div id="page-meditation" class="hidden">
-         <div class="section-card centered-content">
-            <h2 class="title" style="justify-content: center; font-size: 18px;">🧘 භාවනා කාල ගණකය</h2>
-            <div id="timer-display" style="font-size: 60px; color: var(--primary); margin: 30px 0; font-weight: 700; font-family: monospace;">10:00</div>
-            <button class="btn" style="padding: 12px 40px; font-size: 16px;" onclick="startTimer()">ආරම්භය</button>
-            <br><br>
-            <button class="btn btn-dark" style="padding: 10px 30px;" onclick="resetTimer()">නැවත සකසන්න</button>
-        </div>
-    </div>
-
-</div>
-
-<div class="bottom-nav">
-    <div class="nav-item active" onclick="showPage('page-home', this)"><span class="nav-icon">🏠</span>මුල</div>
-    <div class="nav-item" onclick="showPage('page-fav', this)"><span class="nav-icon">❤️</span>ප්‍රියතම</div>
-    <div class="nav-item" onclick="showPage('page-about', this)"><span class="nav-icon">ℹ️</span>අප ගැන</div>
-    <div class="nav-item" onclick="showPage('page-contact', this)"><span class="nav-icon">📞</span>සම්බන්ධ</div>
-    <div class="nav-item" onclick="showPage('page-donate', this)"><span class="nav-icon">🙏</span>ආධාර</div>
-    <div class="nav-item" onclick="showPage('page-merit', this)"><span class="nav-icon">📖</span>පිං පොත</div>
-    <div class="nav-item" onclick="showPage('page-meditation', this)"><span class="nav-icon">🧘</span>භාවනා</div>
-</div>
-
-<audio id="bell" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
-
-<script>
-    const firebaseConfig = { apiKey: "AIzaSyDEiwhtAIdoqdMIV5n_bdDoKuIrCkjqr3M", authDomain: "dharma-nethra.firebaseapp.com", projectId: "dharma-nethra", storageBucket: "dharma-nethra.firebasestorage.app", messagingSenderId: "365410669829", appId: "1:365410669829:web:d9a9465ed1f1f2b792936c" };
-    firebase.initializeApp(firebaseConfig); const db = firebase.firestore();
-    let articles = []; let curIdx = 0; let favs = JSON.parse(localStorage.getItem('f')) || []; let reads = JSON.parse(localStorage.getItem('r')) || []; let merits = JSON.parse(localStorage.getItem('m')) || []; let fs = 16;
-    function tick() { const n = new Date(); document.getElementById('clock').innerText = n.toLocaleTimeString('si-LK'); document.getElementById('date').innerText = n.toLocaleDateString('si-LK', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }); } setInterval(tick, 1000);
-    async function load() { const s = await db.collection("articles").get(); articles = s.docs.map(doc => doc.data()); render(articles); }
-    function render(data) { const list = document.getElementById('article-list'); list.innerHTML = data.map((a, i) => `<div class="article-card" onclick="openArt(${i})">${reads.includes(a.id)?'<span class="read-tag">කියවන ලදී</span>':''}<div class="title">${a.title}</div><p class="snippet">${a.snippet}</p><div style="margin-top:8px; display:flex; justify-content:space-between; align-items:center;"><span style="font-size:10px; font-weight:700; color:var(--primary); opacity:0.8;">කියවන්න තට්ටු කරන්න</span><span style="font-size:20px; cursor:pointer;" onclick="event.stopPropagation(); toggleFav('${a.id}')">${favs.includes(a.id)?'💖':'❤️'}</span></div></div>`).join(''); }
-    function openArt(i) { curIdx = i; const a = articles[i]; if(!reads.includes(a.id)){reads.push(a.id);localStorage.setItem('r',JSON.stringify(reads));} showPage('page-reader'); document.getElementById('view-title').innerText = a.title; document.getElementById('view-content').innerText = a.content; stopArt(); }
-    function showPage(id, el) { const ps = ['page-home', 'page-reader', 'page-about', 'page-contact', 'page-donate', 'page-merit', 'page-meditation']; ps.forEach(p => document.getElementById(p).classList.add('hidden')); const h = document.getElementById('app-header'); if (id==='page-home'||id==='page-fav') h.classList.remove('hidden'); else h.classList.add('hidden'); if(el){document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));el.classList.add('active');} if(id==='page-fav'){document.getElementById('page-home').classList.remove('hidden');render(articles.filter(x=>favs.includes(x.id)));} else {document.getElementById(id).classList.remove('hidden');if(id==='page-home')render(articles);if(id==='page-merit')drawMerits();} window.scrollTo(0,0); stopArt(); }
-    function contactWA() { window.open(`https://wa.me/94778803779?text=${encodeURIComponent(`ගෞරවනීය ස්වාමින් වහන්ස, '${articles[curIdx].title}' ලිපිය පිළිබඳවයි:\n\n`)}`); }
-    function contactMail() { window.location.href = `mailto:anhettigamapodihamuduruwo@gmail.com?subject=ධර්ම නේත්‍රා විමසීම&body=${encodeURIComponent(`ගෞරවනීය ස්වාමින් වහන්ස, '${articles[curIdx].title}' ලිපිය පිළිබඳවයි:\n\n`)}`; }
-    function toggleDarkMode(){document.body.classList.toggle('dark-mode');} function changeSize(v){fs+=v;document.getElementById('view-content').style.fontSize=fs+'px';}
-    function readArt(){window.speechSynthesis.cancel(); let u=new SpeechSynthesisUtterance(document.getElementById('view-content').innerText); u.lang='si-LK'; u.onstart=()=>{document.getElementById('speak-btn').classList.add('hidden');document.getElementById('stop-btn').classList.remove('hidden');}; u.onend=()=>stopArt(); window.speechSynthesis.speak(u);}
-    function stopArt(){window.speechSynthesis.cancel();document.getElementById('speak-btn').classList.remove('hidden');document.getElementById('stop-btn').classList.add('hidden');}
-    function toggleFav(id){favs=favs.includes(id)?favs.filter(x=>x!==id):[...favs,id];localStorage.setItem('f',JSON.stringify(favs));render(articles);} function nav(v){let n=curIdx+v;if(n>=0&&n<articles.length)openArt(n);}
-    function addMerit(){const d=document.getElementById('merit-date').value;const t=document.getElementById('merit-text').value;if(d&&t){merits.unshift({d,t,id:Date.now()});localStorage.setItem('m',JSON.stringify(merits));drawMerits();document.getElementById('merit-text').value="";}}
-    function drawMerits(){document.getElementById('merit-list').innerHTML=merits.map(m=>`<div class="article-card" style="border-left:5px solid var(--secondary);"><div style="font-weight:700;color:var(--primary);">${m.d}</div><p style="margin:5px 0;">${m.t}</p><span style="position:absolute;right:15px;top:10px;cursor:pointer;color:var(--danger);" onclick="delMerit(${m.id})">🗑️</span></div>`).join('');}
-    function delMerit(id){merits=merits.filter(x=>x.id!==id);localStorage.setItem('m',JSON.stringify(merits));drawMerits();}
-    let t_int; function startTimer(){let s=600;clearInterval(t_int);t_int=setInterval(()=>{s--;let m=Math.floor(s/60),sec=s%60;document.getElementById('timer-display').innerText=`${m}:${sec<10?'0'+sec:sec}`;if(s<=0){clearInterval(t_int);document.getElementById('bell').play();alert("භාවනා කාලය අවසන්!");}},1000);} function resetTimer(){clearInterval(t_int);document.getElementById('timer-display').innerText="10:00";}
-    window.onload=()=>{tick();load();document.getElementById('merit-date').valueAsDate=new Date();};
-</script>
+        function showHome() {
+            document.getElementById('home-view').style.display = 'block';
+            document.getElementById('detail-view').style.display = 'none';
+        }
+    </script>
 </body>
 </html>

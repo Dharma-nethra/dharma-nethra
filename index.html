@@ -242,13 +242,17 @@
         <h2 id="full-title" style="color:var(--p-color); line-height:1.4;"></h2>
         <div id="full-content" class="article-text"></div>
 
-        <div style="margin-top:40px; padding:20px; background:var(--card-bg); border-radius:20px; text-align:center; border:1px solid #eee;">
-            <p style="font-weight:bold; margin-bottom:15px;">ලිපිය පිළිබඳව විමසීමට:</p>
-            <div style="display:flex; justify-content:center; gap:25px;">
-                <a id="wa-inquiry" href="#" style="text-decoration:none; font-size:35px;">🟢</a>
-                <a id="mail-inquiry" href="#" style="text-decoration:none; font-size:35px;">🔴</a>
-            </div>
-        </div>
+        <div style="margin-top:40px; padding:25px; background:var(--card-bg); border-radius:25px; text-align:center; border:1px solid #eee; box-shadow: 0 8px 20px rgba(0,0,0,0.05);">
+    <p style="font-weight:bold; margin-bottom:20px; color:#2c3e50; font-size:16px;">ලිපිය පිළිබඳව විමසීමට:</p>
+    <div style="display:flex; justify-content:center; gap:40px;">
+        <a id="wa-inquiry" href="#" style="text-decoration:none; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+            <img src="https://img.icons8.com/color/96/whatsapp.png" style="width:55px; height:55px;" alt="WhatsApp">
+        </a>
+        <a id="mail-inquiry" href="#" style="text-decoration:none; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+            <img src="https://img.icons8.com/color/96/gmail-new.png" style="width:55px; height:55px;" alt="Email">
+        </a>
+    </div>
+</div>
 
         <div style="display:flex; justify-content:space-between; margin-top:30px; margin-bottom:50px;">
             <button style="background:#7f8c8d; color:white; border:none; padding:10px 20px; border-radius:20px;" onclick="closeDetail()">මුල් පිටුවට</button>

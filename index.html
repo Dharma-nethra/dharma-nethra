@@ -122,9 +122,9 @@
             border-left: 6px solid var(--p-color);
             position: relative;
         }
-        .card h3 { color: var(--p-color); margin: 0 0 8px; font-size: 17px; line-height: 1.4; padding-right: 40px; }
+        .card h3 { color: var(--p-color); margin: 0 0 8px; font-size: 17px; line-height: 1.4; padding-right: 45px; }
         .card p { color: var(--text-main); opacity: 0.8; font-size: 14px; line-height: 1.5; margin: 0; }
-        .heart-icon { position: absolute; right: 15px; top: 18px; font-size: 24px; color: #ddd; cursor: pointer; transition: 0.3s; }
+        .heart-icon { position: absolute; right: 15px; top: 18px; font-size: 24px; color: #ccc; cursor: pointer; transition: 0.3s; z-index: 10; }
         .heart-icon.fav-on { color: #e74c3c; }
         .read-status { font-size: 9px; background: #27ae60; color: white; padding: 2px 7px; border-radius: 10px; margin-left: 8px; font-weight: bold; vertical-align: middle; }
 
@@ -445,6 +445,7 @@
                     const id = child.key;
                     allArticleIds.push(id); 
 
+                    // හදවත් සලකුණ පරීක්ෂාව
                     const favClass = favs.includes(id) ? 'fav-on' : '';
                     const readBadge = readList.includes(id) ? '<span class="read-status">කියවන ලදී</span>' : '';
 
@@ -483,6 +484,7 @@
                 document.getElementById('wa-inquiry').href = `https://wa.me/94778803779?text=ගෞරවනීය ස්වාමින් වහන්ස, '${a.title}' ලිපිය පිළිබඳවයි:`;
                 document.getElementById('mail-inquiry').href = `mailto:anhettigamapodihamuduruwo@gmail.com?subject=ලිපිය පිළිබඳ විමසීම&body=ගෞරවනීය ස්වාමින් වහන්ස, '${a.title}' ලිපිය පිළිබඳවයි:`;
 
+                // ලිපිය විවෘත කළ විට පමණක් කියවන ලද ලැයිස්තුවට එක් කිරීම
                 if(!readList.includes(id)) {
                     readList.push(id);
                     localStorage.setItem('myReads', JSON.stringify(readList));
@@ -509,7 +511,7 @@
             location.reload(); 
         }
 
-        // Favorites
+        // Favorites ක්‍රියාවලිය
         function doFav(id, e) {
             if(e) e.stopPropagation();
             if(favs.includes(id)) {

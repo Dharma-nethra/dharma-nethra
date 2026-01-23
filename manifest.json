@@ -2,7 +2,7 @@
   "name": "Dharma Nethra",
   "short_name": "ධර්ම නේත්‍රා",
   "description": "ප්‍රඥාවේ ආලෝකය පතුරුවන සදහම් අවකාශය",
-  "start_url": ".",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#fffbf2",
   "theme_color": "#d35400",

@@ -10,75 +10,72 @@
     <style>
         :root {
             --primary: #d35400; --secondary: #f39c12; --accent: #8e44ad; --success: #27ae60; --danger: #e74c3c;
-            --bg: #fffbf2; --card: #ffffff; --text: #333333; --shadow: 0 2px 10px rgba(0,0,0,0.05);
+            --bg: #fffbf2; --card: #ffffff; --text: #333333; --shadow: 0 2px 8px rgba(0,0,0,0.04);
             --header-bg: linear-gradient(135deg, #f1c40f, #e67e22, #d35400);
         }
         .dark-mode {
-            --bg: #121212; --text: #e0e0e0; --card: #1e1e1e; --shadow: 0 4px 15px rgba(0,0,0,0.4);
+            --bg: #121212; --text: #e0e0e0; --card: #1e1e1e; --shadow: 0 4px 12px rgba(0,0,0,0.4);
             --header-bg: linear-gradient(135deg, #7d5a00, #a04000);
         }
         * { user-select: none; box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Noto Sans Sinhala', 'Poppins', sans-serif; }
         body { background-color: var(--bg); color: var(--text); transition: 0.3s ease; margin: 0; padding-bottom: 90px; }
         
-        /* --- Header with Embedded Lotus Icon --- */
+        /* --- Header with CORRECT Embedded Lotus Icon --- */
         .header { 
-            background: var(--header-bg); padding: 12px 15px; display: flex; align-items: center; justify-content: space-between; 
+            background: var(--header-bg); padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; 
             color: white; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow);
-            border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;
+            border-bottom-left-radius: 18px; border-bottom-right-radius: 18px;
         }
         .header-left { display: flex; align-items: center; }
-        /* Embedded Lotus SVG for permanent fix */
-        .lotus-icon { width: 32px; height: 32px; margin-right: 10px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23ffffff' d='M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256 256-114.6 256-256S397.4 0 256 0zm0 51.2c113.1 0 204.8 91.7 204.8 204.8S369.1 460.8 256 460.8 51.2 369.1 51.2 256 142.9 51.2 256 51.2zM256 96c-26.5 0-48 21.5-48 48s21.5 48 48 48 48-21.5 48-48-21.5-48-48-48zm-64 128c-35.3 0-64 28.7-64 64s28.7 64 64 64 64-28.7 64-64-28.7-64-64-64zm128 0c-35.3 0-64 28.7-64 64s28.7 64 64 64 64-28.7 64-64-28.7-64-64-64zm-64 160c-53 0-96 43-96 96h192c0-53-43-96-96-96z'/%3E%3C/svg%3E"); background-size: cover; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
-        .app-title { font-size: 21px; font-weight: 700; text-shadow: 0 2px 5px rgba(0,0,0,0.3); }
-        .header-icons span { font-size: 20px; margin-left: 15px; cursor: pointer; }
+        /* CORRECT Lotus SVG Data */
+        .lotus-icon { width: 30px; height: 30px; margin-right: 8px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23ffffff' d='M256 0c-35.3 0-64 28.7-64 64 0 35.3 28.7 64 64 64s64-28.7 64-64c0-35.3-28.7-64-64-64zm0 160c-53 0-96 43-96 96 0 34.6 18.3 64.9 46 81.8-5.5 10.4-14.2 25.8-26 46.2H136c-13.3 0-24 10.7-24 24s10.7 24 24 24h32c0 44.2 39.4 80 88 80s88-35.8 88-80h32c13.3 0 24-10.7 24-24s-10.7-24-24-24h-44c-11.8-20.4-20.5-35.8-26-46.2 27.7-16.9 46-47.2 46-81.8 0-53-43-96-96-96zM160 256c0-28.3 17.6-52.3 42.3-63.4.9 10.2 3.8 22.7 9.7 40.4-29.9 5.3-52 31.3-52 62.4v-39.4zm96 64c-17.7 0-32-14.3-32-32 0-14.7 9.9-27.1 23.5-30.9 5.1 15 11.2 32.3 16.5 47.9-2.6.7-5.3 1.1-8 1.1zm8-62.9c5.3-15.6 11.4-32.9 16.5-47.9 13.6 3.8 23.5 16.2 23.5 30.9 0 17.7-14.3 32-32 32-2.7 0-5.4-.4-8-1.1zm42.3 39.9c5.9-17.7 8.8-30.2 9.7-40.4 24.7 11.1 42.3 35.1 42.3 63.4v39.4c0-31.1-22.1-57.1-52-62.4z'/%3E%3C/svg%3E"); background-size: cover; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+        .app-title { font-size: 20px; font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .header-icons span { font-size: 18px; margin-left: 12px; cursor: pointer; }
 
-        .date-strip { background: var(--card); color: var(--primary); text-align: center; padding: 6px; font-size: 11px; font-weight: 700; margin: 10px auto; width: 85%; border-radius: 12px; box-shadow: var(--shadow); border: 1px solid rgba(211, 84, 0, 0.1); }
+        .date-strip { background: var(--card); color: var(--primary); text-align: center; padding: 5px; font-size: 10px; font-weight: 700; margin: 8px auto; width: 85%; border-radius: 10px; box-shadow: var(--shadow); border: 1px solid rgba(211, 84, 0, 0.1); }
         .container { padding: 5px 10px; max-width: 700px; margin: auto; }
         
-        /* --- Ultra-Slim Article Cards (NO STROKE, REDUCED HEIGHT) --- */
+        /* --- Ultra-Compact Article Cards (Reduced Size) --- */
         .article-card { 
-            background: var(--card); padding: 10px 12px; border-radius: 12px; margin-bottom: 10px; 
-            box-shadow: var(--shadow); position: relative; border: none; /* Stroke Removed */
+            background: var(--card); padding: 8px 10px; border-radius: 12px; margin-bottom: 8px; 
+            box-shadow: var(--shadow); position: relative; border: none;
         }
-        .title { font-size: 16px; font-weight: 700; color: var(--primary); margin-bottom: 3px; line-height: 1.3; display: flex; align-items: center; }
-        .title::before { content: '☸'; color: var(--secondary); margin-right: 8px; font-size: 16px; }
-        .snippet { font-size: 13px; line-height: 1.4; opacity: 0.8; margin-top: 0; }
-        .read-tag { position: absolute; top: 10px; right: 10px; background: var(--success); color: white; font-size: 8px; padding: 2px 6px; border-radius: 8px; font-weight: 700; }
+        .title { font-size: 15px; font-weight: 700; color: var(--primary); margin-bottom: 2px; line-height: 1.2; display: flex; align-items: center; }
+        .title::before { content: '☸'; color: var(--secondary); margin-right: 6px; font-size: 15px; }
+        .snippet { font-size: 12px; line-height: 1.3; opacity: 0.8; margin-top: 0; }
+        .read-tag { position: absolute; top: 8px; right: 8px; background: var(--success); color: white; font-size: 8px; padding: 2px 5px; border-radius: 6px; font-weight: 700; }
 
         /* --- UI Elements --- */
-        .btn { border: none; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: 700; margin: 4px; background: var(--primary); color: white; font-size: 12px; transition: 0.3s; }
+        .btn { border: none; padding: 8px 16px; border-radius: 25px; cursor: pointer; font-weight: 700; margin: 3px; background: var(--primary); color: white; font-size: 12px; transition: 0.3s; }
         .btn-wa { background: var(--success); } .btn-dark { background: #34495e; } .btn-danger { background: var(--danger); }
-        .section-card { background: var(--card); padding: 25px 20px; border-radius: 25px; box-shadow: var(--shadow); text-align: center; border: 1px solid rgba(0,0,0,0.03); }
+        .section-card { background: var(--card); padding: 20px 15px; border-radius: 20px; box-shadow: var(--shadow); text-align: center; border: 1px solid rgba(0,0,0,0.03); }
 
-        /* --- Reader Top Controls --- */
-        .reader-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .reader-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .reader-controls { display: flex; gap: 4px; background: var(--bg); padding: 3px; border-radius: 20px; }
         .btn-mini { border: none; padding: 4px 8px; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 10px; background: var(--card); color: var(--text); border: 1px solid rgba(0,0,0,0.1); }
         .btn-speak-mini { background: var(--accent); color: white; } .btn-stop-mini { background: var(--danger); color: white; }
 
-        /* --- Bottom Nav --- */
         .bottom-nav { 
             position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; 
-            justify-content: space-around; padding: 8px 0; border-top-left-radius: 20px; border-top-right-radius: 20px;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.07); z-index: 100;
+            justify-content: space-around; padding: 6px 0; border-top-left-radius: 18px; border-top-right-radius: 18px;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.06); z-index: 100;
         }
         .nav-item { font-size: 9px; cursor: pointer; opacity: 0.5; display: flex; flex-direction: column; align-items: center; color: var(--text); }
         .nav-item.active { opacity: 1; color: var(--primary); font-weight: 700; }
-        .nav-icon { font-size: 20px; margin-bottom: 2px; }
+        .nav-icon { font-size: 18px; margin-bottom: 2px; }
 
-        /* --- Alignments & Dharma Chakra --- */
         .centered-content { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; }
-        /* Embedded Dharma Chakra SVG for permanent fix */
-        .chakra-icon { width: 60px; height: 60px; margin-bottom: 10px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23f39c12' d='M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256 256-114.6 256-256S397.4 0 256 0zm0 469.3c-117.8 0-213.3-95.5-213.3-213.3S138.2 42.7 256 42.7 469.3 138.2 469.3 256 373.8 469.3 256 469.3zm0-384c-94.1 0-170.7 76.6-170.7 170.7S161.9 426.7 256 426.7 426.7 350.1 426.7 256 350.1 85.3 256 85.3zm0 298.7c-70.6 0-128-57.4-128-128S185.4 128 256 128s128 57.4 128 128-57.4 128-128 128zm0-213.3c-47.1 0-85.3 38.2-85.3 85.3s38.2 85.3 85.3 85.3 85.3-38.2 85.3-85.3-38.2-85.3-85.3-85.3z'/%3E%3C/svg%3E"); background-size: cover; }
+        /* CORRECT Dharma Chakra SVG Data */
+        .chakra-icon { width: 50px; height: 50px; margin-bottom: 10px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23f39c12' d='M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256 256-114.6 256-256S397.4 0 256 0zm0 469.3c-117.8 0-213.3-95.5-213.3-213.3S138.2 42.7 256 42.7 469.3 138.2 469.3 256 373.8 469.3 256 469.3zm0-384c-94.1 0-170.7 76.6-170.7 170.7S161.9 426.7 256 426.7 426.7 350.1 426.7 256 350.1 85.3 256 85.3zm0 298.7c-70.6 0-128-57.4-128-128S185.4 128 256 128s128 57.4 128 128-57.4 128-128 128zm0-213.3c-47.1 0-85.3 38.2-85.3 85.3s38.2 85.3 85.3 85.3 85.3-38.2 85.3-85.3-38.2-85.3-85.3-85.3z'/%3E%3C/svg%3E"); background-size: cover; }
 
-        .contact-pill { display: flex; align-items: center; justify-content: center; width: 100%; padding: 12px; background: var(--bg); border-radius: 15px; margin-bottom: 10px; text-decoration: none; color: var(--text); font-weight: 700; border: 1.5px solid #eee; }
+        .contact-pill { display: flex; align-items: center; justify-content: center; width: 100%; padding: 10px; background: var(--bg); border-radius: 15px; margin-bottom: 8px; text-decoration: none; color: var(--text); font-weight: 700; border: 1.5px solid #eee; font-size: 13px; }
         .dark-mode .contact-pill { background: #222; border-color: #333; }
-        .contact-pill img, .contact-pill svg { width: 22px; margin-right: 10px; }
+        .contact-pill img, .contact-pill svg { width: 20px; margin-right: 10px; }
         
-        .bank-box { background: #fffcf2; padding: 25px; border-radius: 20px; margin: 15px 0; border: 1.5px dashed #d35400; color: #333; width: 100%; }
+        .bank-box { background: #fffcf2; padding: 20px; border-radius: 18px; margin: 12px 0; border: 1.5px dashed #d35400; color: #333; width: 100%; }
         .dark-mode .bank-box { background: #2c251a; color: #eee; }
         .hidden { display: none; }
-        input, textarea { width: 100%; padding: 12px; border-radius: 12px; margin: 8px 0; background: var(--bg); color: var(--text); border: 1px solid #eee; }
+        input, textarea { width: 100%; padding: 10px; border-radius: 12px; margin: 6px 0; background: var(--bg); color: var(--text); border: 1px solid #eee; font-size: 14px; }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -102,12 +99,12 @@
     
     <div id="page-home">
         <div id="article-list">
-            <p style="text-align:center; padding: 40px; opacity: 0.5;">සද්ධර්මය පූරණය වෙමින් පවතී...</p>
+            <p style="text-align:center; padding: 40px; opacity: 0.5; font-size: 14px;">සද්ධර්මය පූරණය වෙමින් පවතී...</p>
         </div>
     </div>
 
     <div id="page-reader" class="hidden">
-        <div class="section-card" style="text-align: left; padding: 18px;">
+        <div class="section-card" style="text-align: left; padding: 15px;">
             <div class="reader-top-bar">
                 <button class="btn btn-dark" style="padding: 5px 10px; font-size: 10px; margin:0;" onclick="showPage('page-home')">⬅️ ආපසු</button>
                 <div class="reader-controls">
@@ -117,15 +114,15 @@
                     <button id="stop-btn" class="btn-mini btn-stop-mini hidden" onclick="stopArt()">🛑 නවත්වන්න</button>
                 </div>
             </div>
-            <h2 id="view-title" class="title" style="font-size: 18px; margin-top: 8px;"></h2>
-            <div style="height: 2px; width: 40px; background: var(--secondary); margin: 10px 0;"></div>
-            <div id="view-content" style="line-height:1.8; text-align:justify; font-size:16px; color: var(--text);"></div>
+            <h2 id="view-title" class="title" style="font-size: 17px; margin-top: 8px;"></h2>
+            <div style="height: 2px; width: 35px; background: var(--secondary); margin: 8px 0;"></div>
+            <div id="view-content" style="line-height:1.7; text-align:justify; font-size:15px; color: var(--text);"></div>
             
-            <div style="margin-top:30px; border-top:1px solid #eee; padding-top:20px; text-align:center;">
+            <div style="margin-top:25px; border-top:1px solid #eee; padding-top:15px; text-align:center;">
                 <button class="btn btn-wa" onclick="contactWA()">💬 WhatsApp</button>
                 <button class="btn btn-danger" onclick="contactMail()">📧 Email</button>
             </div>
-            <div style="display:flex; justify-content: space-between; margin-top:25px;">
+            <div style="display:flex; justify-content: space-between; margin-top:20px;">
                 <button class="btn btn-dark" onclick="nav(-1)">⬅️ පෙර</button>
                 <button class="btn btn-dark" onclick="nav(1)">මීළඟ ➡️</button>
             </div>
@@ -135,16 +132,16 @@
     <div id="page-about" class="hidden">
         <div class="section-card centered-content">
             <div class="chakra-icon"></div>
-            <h2 class="title" style="justify-content: center; font-size: 20px;">පූජ්‍යපාද අංහෙට්ටිගම සුගතනන්ද ස්වාමීන් වහන්සේ</h2>
-            <p style="font-weight: 700; color: var(--secondary); font-size: 14px; margin-top: -5px;">(අංහෙට්ටිගම පොඩි හාමුදුරුවෝ)</p>
-            <p style="text-align: justify; line-height: 1.7; margin-top: 18px; font-size: 14px;">
+            <h2 class="title" style="justify-content: center; font-size: 18px;">පූජ්‍යපාද අංහෙට්ටිගම සුගතනන්ද ස්වාමීන් වහන්සේ</h2>
+            <p style="font-weight: 700; color: var(--secondary); font-size: 13px; margin-top: -5px;">(අංහෙට්ටිගම පොඩි හාමුදුරුවෝ)</p>
+            <p style="text-align: justify; line-height: 1.6; margin-top: 15px; font-size: 14px;">
                 මූලික පිරිවෙන් අධ්‍යාපනය, ප්‍රාචීන භාෂා අධ්‍යාපනය සහ ත්‍රිපිටක ධර්ම අධ්‍යාපනය මැනවින් හදාරා ඇති ගෞරවනීය ස්වාමීන් වහන්සේ නමකි. 
                 අති ගම්භීර නිර්මල සිරි සද්ධර්මය වර්තමාන සැදැහැති ඔබ සැමට අවබෝධ කර ගත හැකි පරිදි ඉතා සරල බසින් දහම් ලිපි රචනා කරමින් උතුම් වූ ධර්ම ප්‍රචාරයේ නිරත වෙති.
             </p>
-            <hr style="opacity: 0.1; margin: 25px 0; width: 100%;">
+            <hr style="opacity: 0.1; margin: 20px 0; width: 100%;">
             <div style="text-align: center;">
-                <h3 class="title" style="justify-content: center; font-size: 17px;">තාක්ෂණික පද්ධතිය</h3>
-                <p style="line-height: 1.7; font-size: 13px; opacity: 0.8;">
+                <h3 class="title" style="justify-content: center; font-size: 16px;">තාක්ෂණික පද්ධතිය</h3>
+                <p style="line-height: 1.6; font-size: 13px; opacity: 0.8;">
                     <b>GMU STUDIO (PVT) LTD.</b> ආයතනයේ පළපුරුදු තාක්ෂණික කණ්ඩායම විසින් මෙම "ධර්ම නේත්‍රා" යෙදුම ගෞරවනීය ස්වාමීන් වහන්සේගේ පූර්ණ අවසරය සහ මඟපෙන්වීම යටතේ සද්ධර්මයේ ආරක්ෂාව උදෙසා පවත්වා ගෙන යනු ලැබේ.
                 </p>
             </div>
@@ -153,20 +150,20 @@
 
     <div id="page-contact" class="hidden">
         <div class="section-card centered-content">
-            <h2 class="section-title" style="font-size: 20px; margin-bottom: 20px; color: var(--primary); font-weight: 700;">සම්බන්ධ වන්න</h2>
+            <h2 class="section-title" style="font-size: 18px; margin-bottom: 15px; color: var(--primary); font-weight: 700;">සම්බන්ධ වන්න</h2>
             
             <a href="https://wa.me/94778803779" class="contact-pill" style="border-color: #25D366;">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WA">
                 <span>+94 77 880 3779 (WhatsApp)</span>
             </a>
-            <p style="color: var(--danger); font-size: 11px; font-weight: 700; margin: -5px 0 20px 0;">⚠️ ඇමතුම් ගැනීමෙන් වළකින්න.</p>
+            <p style="color: var(--danger); font-size: 11px; font-weight: 700; margin: -5px 0 15px 0;">⚠️ ඇමතුම් ගැනීමෙන් වළකින්න.</p>
             
             <a href="mailto:anhettigamapodihamuduruwo@gmail.com" class="contact-pill" style="border-color: #e74c3c;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path fill="#e74c3c" d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="#e74c3c" d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
                 <span style="font-size: 12px; margin-left: 10px;">anhettigamapodihamuduruwo@gmail.com</span>
             </a>
 
-            <p style="font-size: 12px; opacity: 0.7; margin: 30px 0 12px 0;">තාක්ෂණික කණ්ඩායම (GMU STUDIO):</p>
+            <p style="font-size: 12px; opacity: 0.7; margin: 25px 0 10px 0;">තාක්ෂණික කණ්ඩායම (GMU STUDIO):</p>
             <a href="https://wa.me/94763861339" class="contact-pill" style="border-color: var(--accent);">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WA">
                 <span>+94 76 386 1339 (WhatsApp)</span>
@@ -176,45 +173,44 @@
 
     <div id="page-donate" class="hidden">
         <div class="section-card centered-content">
-            <h2 class="section-title" style="font-size: 20px; margin-bottom: 20px; color: var(--primary); font-weight: 700;">පිංකමට දායක වන්න</h2>
-            <p style="line-height: 1.7; font-size: 14px; opacity: 0.8; margin-bottom: 20px;">
-                මෙම "ධර්ම නේත්‍රා" යෙදුම හරහා උතුම් වූ සද්ධර්මය දසත පැතිරවීමට ඔබ ලබා දෙන සහයෝගය අති මහත් වූ කුසල් රැස් කර දෙන "ධර්ම දානයකි". ධර්ම ප්‍රචාරක සේවාවන් අඛණ්ඩව පවත්වාගෙන යාමට ඔබගේ සහාය අප ඉතා අගය කරන්නෙමු.
+            <h2 class="section-title" style="font-size: 18px; margin-bottom: 15px; color: var(--primary); font-weight: 700;">පිංකමට දායක වන්න</h2>
+            <p style="line-height: 1.6; font-size: 14px; opacity: 0.8; margin-bottom: 15px;">
+                මෙම "ධර්ම නේත්‍රා" යෙදුම හරහා උතුම් වූ සද්ධර්මය දසත පැතිරවීමට ඔබ ලබා දෙන සහයෝගය අති මහත් වූ කුසල් රැස් කර දෙන "ධර්ම දානයකි".
             </p>
             
             <div class="bank-box">
-                <h3 style="margin-top: 0; color: var(--primary); font-size: 17px; display: flex; align-items: center; justify-content: center;"><span style="margin-right: 10px;">🏛️</span> බැංකු ගිණුම් විස්තර</h3>
-                <div style="line-height: 1.8; font-size: 15px; font-weight: 600; text-align: center; display: inline-block;">
+                <h3 style="margin-top: 0; color: var(--primary); font-size: 16px; display: flex; align-items: center; justify-content: center;"><span style="margin-right: 8px;">🏛️</span> බැංකු ගිණුම් විස්තර</h3>
+                <div style="line-height: 1.7; font-size: 14px; font-weight: 600; text-align: center; display: inline-block;">
                     බැංකුව: <b>Bank of Ceylon (BOC)</b><br>
                     ශාඛාව: <b>Kiriella Branch (කිරිඇල්ල)</b><br>
-                    අංකය: <span style="font-size: 22px; color: var(--primary); font-weight: 800;">89862879</span><br>
+                    අංකය: <span style="font-size: 20px; color: var(--primary); font-weight: 800;">89862879</span><br>
                     හිමිකරු: <b>A Udara Sandaruwan</b>
                 </div>
             </div>
 
-            <p style="font-size: 12px; opacity: 0.7; margin-bottom: 15px;">පින්කමට අදාළ රිසිට්පත පහත WhatsApp අංකය වෙත යොමු කරන්න:</p>
-            <button class="btn btn-wa" style="width: 100%; padding: 18px; font-size: 15px; display: flex; align-items: center; justify-content: center;" onclick="window.open('https://wa.me/94763861339?text=Donation Receipt')">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="22" style="margin-right: 10px;">
+            <button class="btn btn-wa" style="width: 100%; padding: 15px; font-size: 14px; display: flex; align-items: center; justify-content: center;" onclick="window.open('https://wa.me/94763861339?text=Donation Receipt')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="20" style="margin-right: 10px;">
                 රිසිට්පත එවන්න (076 386 1339)
             </button>
         </div>
     </div>
     
     <div id="page-merit" class="hidden">
-        <div class="section-card" style="text-align: left; padding: 20px;">
-            <h2 class="title" style="justify-content: center; font-size: 20px;">📖 පිං පොත</h2>
+        <div class="section-card" style="text-align: left; padding: 15px;">
+            <h2 class="title" style="justify-content: center; font-size: 18px;">📖 පිං පොත</h2>
             <input type="date" id="merit-date"><textarea id="merit-text" rows="3" placeholder="කළ පින්කම මෙහි සටහන් කරන්න..."></textarea>
-            <button class="btn" style="width:100%; font-size: 16px;" onclick="addMerit()">පිං පොතේ සටහන් කරන්න</button>
+            <button class="btn" style="width:100%; font-size: 14px;" onclick="addMerit()">පිං පොතේ සටහන් කරන්න</button>
         </div>
-        <div id="merit-list" style="margin-top: 15px;"></div>
+        <div id="merit-list" style="margin-top: 10px;"></div>
     </div>
 
     <div id="page-meditation" class="hidden">
          <div class="section-card centered-content">
-            <h2 class="title" style="justify-content: center; font-size: 20px;">🧘 භාවනා කාල ගණකය</h2>
-            <div id="timer-display" style="font-size: 70px; color: var(--primary); margin: 35px 0; font-weight: 700; font-family: monospace;">10:00</div>
-            <button class="btn" style="padding: 15px 50px; font-size: 18px;" onclick="startTimer()">ආරම්භය</button>
+            <h2 class="title" style="justify-content: center; font-size: 18px;">🧘 භාවනා කාල ගණකය</h2>
+            <div id="timer-display" style="font-size: 60px; color: var(--primary); margin: 30px 0; font-weight: 700; font-family: monospace;">10:00</div>
+            <button class="btn" style="padding: 12px 40px; font-size: 16px;" onclick="startTimer()">ආරම්භය</button>
             <br><br>
-            <button class="btn btn-dark" onclick="resetTimer()">නැවත සකසන්න</button>
+            <button class="btn btn-dark" style="padding: 10px 30px;" onclick="resetTimer()">නැවත සකසන්න</button>
         </div>
     </div>
 
@@ -235,10 +231,10 @@
 <script>
     const firebaseConfig = { apiKey: "AIzaSyDEiwhtAIdoqdMIV5n_bdDoKuIrCkjqr3M", authDomain: "dharma-nethra.firebaseapp.com", projectId: "dharma-nethra", storageBucket: "dharma-nethra.firebasestorage.app", messagingSenderId: "365410669829", appId: "1:365410669829:web:d9a9465ed1f1f2b792936c" };
     firebase.initializeApp(firebaseConfig); const db = firebase.firestore();
-    let articles = []; let curIdx = 0; let favs = JSON.parse(localStorage.getItem('f')) || []; let reads = JSON.parse(localStorage.getItem('r')) || []; let merits = JSON.parse(localStorage.getItem('m')) || []; let fs = 17;
+    let articles = []; let curIdx = 0; let favs = JSON.parse(localStorage.getItem('f')) || []; let reads = JSON.parse(localStorage.getItem('r')) || []; let merits = JSON.parse(localStorage.getItem('m')) || []; let fs = 16;
     function tick() { const n = new Date(); document.getElementById('clock').innerText = n.toLocaleTimeString('si-LK'); document.getElementById('date').innerText = n.toLocaleDateString('si-LK', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }); } setInterval(tick, 1000);
     async function load() { const s = await db.collection("articles").get(); articles = s.docs.map(doc => doc.data()); render(articles); }
-    function render(data) { const list = document.getElementById('article-list'); list.innerHTML = data.map((a, i) => `<div class="article-card" onclick="openArt(${i})">${reads.includes(a.id)?'<span class="read-tag">කියවන ලදී</span>':''}<div class="title">${a.title}</div><p class="snippet">${a.snippet}</p><div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center;"><span style="font-size:10px; font-weight:700; color:var(--primary); opacity:0.8;">කියවන්න තට්ටු කරන්න</span><span style="font-size:20px; cursor:pointer;" onclick="event.stopPropagation(); toggleFav('${a.id}')">${favs.includes(a.id)?'💖':'❤️'}</span></div></div>`).join(''); }
+    function render(data) { const list = document.getElementById('article-list'); list.innerHTML = data.map((a, i) => `<div class="article-card" onclick="openArt(${i})">${reads.includes(a.id)?'<span class="read-tag">කියවන ලදී</span>':''}<div class="title">${a.title}</div><p class="snippet">${a.snippet}</p><div style="margin-top:8px; display:flex; justify-content:space-between; align-items:center;"><span style="font-size:10px; font-weight:700; color:var(--primary); opacity:0.8;">කියවන්න තට්ටු කරන්න</span><span style="font-size:20px; cursor:pointer;" onclick="event.stopPropagation(); toggleFav('${a.id}')">${favs.includes(a.id)?'💖':'❤️'}</span></div></div>`).join(''); }
     function openArt(i) { curIdx = i; const a = articles[i]; if(!reads.includes(a.id)){reads.push(a.id);localStorage.setItem('r',JSON.stringify(reads));} showPage('page-reader'); document.getElementById('view-title').innerText = a.title; document.getElementById('view-content').innerText = a.content; stopArt(); }
     function showPage(id, el) { const ps = ['page-home', 'page-reader', 'page-about', 'page-contact', 'page-donate', 'page-merit', 'page-meditation']; ps.forEach(p => document.getElementById(p).classList.add('hidden')); const h = document.getElementById('app-header'); if (id==='page-home'||id==='page-fav') h.classList.remove('hidden'); else h.classList.add('hidden'); if(el){document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));el.classList.add('active');} if(id==='page-fav'){document.getElementById('page-home').classList.remove('hidden');render(articles.filter(x=>favs.includes(x.id)));} else {document.getElementById(id).classList.remove('hidden');if(id==='page-home')render(articles);if(id==='page-merit')drawMerits();} window.scrollTo(0,0); stopArt(); }
     function contactWA() { window.open(`https://wa.me/94778803779?text=${encodeURIComponent(`ගෞරවනීය ස්වාමින් වහන්ස, '${articles[curIdx].title}' ලිපිය පිළිබඳවයි:\n\n`)}`); }

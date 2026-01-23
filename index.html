@@ -10,7 +10,7 @@
     <style>
         :root {
             --primary: #d35400; --secondary: #f39c12; --accent: #8e44ad; --success: #27ae60; --danger: #e74c3c;
-            --bg: #fffbf2; --card: #ffffff; --text: #333333; --shadow: 0 4px 15px rgba(0,0,0,0.05);
+            --bg: #fffbf2; --card: #ffffff; --text: #333333; --shadow: 0 4px 15px rgba(0,0,0,0.06);
             --header-bg: linear-gradient(135deg, #f1c40f, #e67e22, #d35400);
         }
         .dark-mode {
@@ -18,36 +18,36 @@
             --header-bg: linear-gradient(135deg, #7d5a00, #a04000);
         }
         * { user-select: none; box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Noto Sans Sinhala', 'Poppins', sans-serif; }
-        body { background-color: var(--bg); color: var(--text); transition: 0.4s ease; margin: 0; padding-bottom: 80px; }
+        body { background-color: var(--bg); color: var(--text); transition: 0.4s ease; margin: 0; padding-bottom: 100px; }
         
-        /* --- Compact Golden Header with Lotus --- */
+        /* --- Premium Header --- */
         .header { 
-            background: var(--header-bg); padding: 12px 10px; text-align: center; color: white;
-            position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow);
+            background: var(--header-bg); padding: 12px 15px; display: flex; align-items: center; justify-content: space-between; 
+            color: white; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow);
             border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;
         }
-        .header img { width: 30px; margin-bottom: 2px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
-        .app-title { font-size: 20px; font-weight: 700; text-shadow: 0 2px 5px rgba(0,0,0,0.3); }
-        .slogan { font-size: 10px; font-style: italic; opacity: 0.9; margin-top: 2px; font-weight: 500; }
+        .header-left { display: flex; align-items: center; }
+        .lotus-icon { width: 32px; height: 32px; margin-right: 10px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+        .app-title { font-size: 21px; font-weight: 700; text-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        .header-icons span { font-size: 20px; margin-left: 15px; cursor: pointer; }
 
-        .date-bar { background: var(--card); color: var(--primary); text-align: center; padding: 6px; font-size: 11px; font-weight: 700; margin: 10px auto; width: 85%; border-radius: 12px; box-shadow: var(--shadow); border: 1px solid rgba(211, 84, 0, 0.1); }
+        .date-strip { background: var(--card); color: var(--primary); text-align: center; padding: 6px; font-size: 11px; font-weight: 700; margin: 10px auto; width: 85%; border-radius: 12px; box-shadow: var(--shadow); border: 1px solid rgba(211, 84, 0, 0.1); }
         .container { padding: 5px 12px; max-width: 700px; margin: auto; }
         
-        /* --- Ultra-Slim Article Cards with 1px stroke --- */
+        /* --- Ultra-Slim Article Cards --- */
         .article-card { 
             background: var(--card); padding: 12px 15px; border-radius: 15px; margin-bottom: 12px; 
-            box-shadow: var(--shadow); position: relative; border: 1px solid transparent;
+            box-shadow: var(--shadow); position: relative; border: 1.2px solid transparent;
             background-image: linear-gradient(var(--card), var(--card)), linear-gradient(45deg, #f39c12, #d35400, #8e44ad);
             background-origin: border-box; background-clip: content-box, border-box;
         }
         .title { font-size: 16px; font-weight: 700; color: var(--primary); margin-bottom: 4px; line-height: 1.3; display: flex; align-items: center; }
         .title::before { content: '☸'; color: var(--secondary); margin-right: 8px; font-size: 16px; }
-        .snippet { font-size: 13px; line-height: 1.4; opacity: 0.8; margin-top: 0; }
+        .snippet { font-size: 13px; line-height: 1.4; opacity: 0.8; }
         .read-tag { position: absolute; top: 10px; right: 10px; background: var(--success); color: white; font-size: 8px; padding: 2px 6px; border-radius: 8px; font-weight: 700; }
 
         /* --- UI Elements --- */
-        .btn { border: none; padding: 10px 18px; border-radius: 30px; cursor: pointer; font-weight: 700; margin: 4px; background: var(--primary); color: white; font-size: 12px; transition: 0.3s; }
-        .btn:active { transform: scale(0.96); }
+        .btn { border: none; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: 700; margin: 4px; background: var(--primary); color: white; font-size: 12px; transition: 0.3s; }
         .btn-wa { background: var(--success); } .btn-dark { background: #34495e; } .btn-danger { background: var(--danger); }
         .section-card { background: var(--card); padding: 25px 20px; border-radius: 25px; box-shadow: var(--shadow); text-align: center; border: 1.5px solid rgba(0,0,0,0.03); }
 
@@ -58,17 +58,22 @@
         .btn-speak-mini { background: var(--accent); color: white; } .btn-stop-mini { background: var(--danger); color: white; }
 
         /* --- Bottom Nav --- */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 8px 0; border-top-left-radius: 18px; border-top-right-radius: 18px; box-shadow: 0 -5px 20px rgba(0,0,0,0.07); z-index: 100; }
+        .bottom-nav { 
+            position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; 
+            justify-content: space-around; padding: 8px 0; border-top-left-radius: 20px; border-top-right-radius: 20px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.07); z-index: 100;
+        }
         .nav-item { font-size: 8px; cursor: pointer; opacity: 0.5; display: flex; flex-direction: column; align-items: center; color: var(--text); }
         .nav-item.active { opacity: 1; color: var(--primary); font-weight: 700; }
         .nav-icon { font-size: 18px; margin-bottom: 2px; }
 
-        /* --- Alignments --- */
         .centered-content { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; }
         .contact-pill { display: flex; align-items: center; justify-content: center; width: 100%; padding: 12px; background: var(--bg); border-radius: 15px; margin-bottom: 10px; text-decoration: none; color: var(--text); font-weight: 700; border: 1.5px solid #eee; }
+        .contact-pill:hover { border-color: var(--primary); }
         .dark-mode .contact-pill { background: #222; border-color: #333; }
         .contact-pill img, .contact-pill svg { width: 22px; margin-right: 10px; }
-        .bank-box { background: #fffcf2; padding: 20px; border-radius: 20px; margin: 15px 0; border: 1.5px dashed #d35400; color: #333; width: 100%; }
+        
+        .bank-box { background: #fffcf2; padding: 25px; border-radius: 20px; margin: 15px 0; border: 1.5px dashed #d35400; color: #333; width: 100%; }
         .dark-mode .bank-box { background: #2c251a; color: #eee; }
         .hidden { display: none; }
         input, textarea { width: 100%; padding: 12px; border-radius: 12px; margin: 8px 0; background: var(--bg); color: var(--text); border: 1px solid #eee; }
@@ -77,19 +82,22 @@
 <body oncontextmenu="return false;">
 
 <div class="header" id="app-header">
-    <img src="https://cdn-icons-png.flaticon.com/512/11637/11637866.png" alt="Lotus">
-    <div class="app-title">ධර්ම නේත්‍රා</div>
-    <div class="slogan">"ප්‍රඥාවේ ආලෝකය පතුරුවන සදහම් අවකාශය"</div>
-    <div style="margin-top: 8px;">
-        <button class="btn" style="padding: 3px 8px; font-size: 8px; background: rgba(0,0,0,0.2); margin: 0;" onclick="toggleDarkMode()">🌙 Dark Mode</button>
+    <div class="header-left">
+        <img src="https://cdn-icons-png.flaticon.com/512/11637/11637866.png" class="lotus-icon" alt="Lotus">
+        <div class="app-title">ධර්ම නේත්‍රා</div>
+    </div>
+    <div class="header-icons">
+        <span onclick="toggleDarkMode()">🌙</span>
+        <span>🔔</span>
     </div>
 </div>
 
-<div class="date-bar">
+<div class="date-strip">
     <span id="clock">00:00:00</span> | <span id="date">පූරණය වේ...</span>
 </div>
 
 <div class="container" id="main-content">
+    
     <div id="page-home">
         <div id="article-list">
             <p style="text-align:center; padding: 40px; opacity: 0.5;">සද්ධර්මය පූරණය වෙමින් පවතී...</p>
@@ -115,7 +123,7 @@
                 <button class="btn btn-wa" onclick="contactWA()">💬 WhatsApp</button>
                 <button class="btn btn-danger" onclick="contactMail()">📧 Email</button>
             </div>
-            <div style="display:flex; justify-content: space-between; margin-top:20px;">
+            <div style="display:flex; justify-content: space-between; margin-top:25px;">
                 <button class="btn btn-dark" onclick="nav(-1)">⬅️ පෙර</button>
                 <button class="btn btn-dark" onclick="nav(1)">මීළඟ ➡️</button>
             </div>
@@ -124,32 +132,39 @@
 
     <div id="page-about" class="hidden">
         <div class="section-card">
-            <img src="https://cdn-icons-png.flaticon.com/512/2913/2913564.png" width="60" style="margin-bottom: 10px;" alt="Dharma Chakra">
-            <h2 class="title" style="justify-content: center; font-size: 18px;">පූජ්‍යපාද අංහෙට්ටිගම සුගතනන්ද ස්වාමීන් වහන්සේ</h2>
-            <p style="font-weight: 700; color: var(--secondary); font-size: 13px;">(අංහෙට්ටිගම පොඩි හාමුදුරුවෝ)</p>
-            <p style="text-align: justify; line-height: 1.6; font-size: 14px;">
-                මූලික පිරිවෙන් අධ්‍යාපනය, ප්‍රාචීන භාෂා අධ්‍යාපනය සහ ත්‍රිපිටක ධර්ම අධ්‍යාපනය මැනවින් හදාරා ඇති ස්වාමීන් වහන්සේ නමකි. අති ගම්භීර නිර්මල සද්ධර්මය වර්තමාන සැදැහැවතුන්ට අවබෝධ කර ගත හැකි පරිදි සරල බසින් දහම් ලිපි රචනා කරමින් ධර්ම ප්‍රචාරයේ නිරත වෙති.
+            <img src="https://cdn-icons-png.flaticon.com/512/2913/2913564.png" width="70" style="margin-bottom: 12px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));" alt="Dharma Chakra">
+            <h2 class="title" style="justify-content: center; font-size: 20px;">පූජ්‍යපාද අංහෙට්ටිගම සුගතනන්ද ස්වාමීන් වහන්සේ</h2>
+            <p style="font-weight: 700; color: var(--secondary); font-size: 14px; margin-top: -5px;">(අංහෙට්ටිගම පොඩි හාමුදුරුවෝ)</p>
+            <p style="text-align: justify; line-height: 1.7; margin-top: 18px; font-size: 14px;">
+                මූලික පිරිවෙන් අධ්‍යාපනය, ප්‍රාචීන භාෂා අධ්‍යාපනය සහ ත්‍රිපිටක ධර්ම අධ්‍යාපනය මැනවින් හදාරා ඇති ගෞරවනීය ස්වාමීන් වහන්සේ නමකි. 
+                අති ගම්භීර නිර්මල සිරි සද්ධර්මය වර්තමාන සැදැහැති ඔබ සැමට අවබෝධ කර ගත හැකි පරිදි ඉතා සරල බසින් දහම් ලිපි රචනා කරමින් උතුම් වූ ධර්ම ප්‍රචාරයේ නිරත වෙති.
             </p>
-            <hr style="opacity: 0.1; margin: 20px 0;">
-            <div style="font-size: 13px; opacity: 0.8; line-height: 1.5;">
-                <b>GMU STUDIO (PVT) LTD.</b> තාක්ෂණික කණ්ඩායම විසින් මෙම යෙදුම ගෞරවනීය ස්වාමීන් වහන්සේගේ පූර්ණ අවසරය මත පවත්වා ගෙන යනු ලැබේ.
+            <hr style="opacity: 0.1; margin: 25px 0;">
+            <div style="text-align: center;">
+                <h3 class="title" style="justify-content: center; font-size: 17px;">තාක්ෂණික පද්ධතිය</h3>
+                <p style="line-height: 1.7; font-size: 13px; opacity: 0.8;">
+                    <b>GMU STUDIO (PVT) LTD.</b> ආයතනයේ පළපුරුදු තාක්ෂණික කණ්ඩායම විසින් මෙම "ධර්ම නේත්‍රා" යෙදුම ගෞරවනීය ස්වාමීන් වහන්සේගේ පූර්ණ අවසරය සහ මඟපෙන්වීම යටතේ සද්ධර්මයේ ආරක්ෂාව උදෙසා පවත්වා ගෙන යනු ලැබේ.
+                </p>
             </div>
         </div>
     </div>
 
     <div id="page-contact" class="hidden">
         <div class="section-card centered-content">
-            <h2 class="section-title" style="font-size: 18px; margin-bottom: 15px;">සම්බන්ධ වන්න</h2>
+            <h2 class="section-title" style="font-size: 20px; margin-bottom: 20px;">සම්බන්ධ වන්න</h2>
+            
             <a href="https://wa.me/94778803779" class="contact-pill" style="border-color: #25D366;">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WA">
                 <span>+94 77 880 3779 (WhatsApp)</span>
             </a>
-            <p style="color: var(--danger); font-size: 11px; font-weight: 700; margin: -5px 0 15px 0;">⚠️ ඇමතුම් ගැනීමෙන් වළකින්න.</p>
+            <p style="color: var(--danger); font-size: 11px; font-weight: 700; margin: -5px 0 20px 0;">⚠️ ඇමතුම් ගැනීමෙන් වළකින්න.</p>
+            
             <a href="mailto:anhettigamapodihamuduruwo@gmail.com" class="contact-pill" style="border-color: #e74c3c;">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#e74c3c" d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                <span style="font-size: 11px; word-break: break-all;">anhettigamapodihamuduruwo@gmail.com</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path fill="#e74c3c" d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                <span style="font-size: 12px; margin-left: 10px;">anhettigamapodihamuduruwo@gmail.com</span>
             </a>
-            <p style="font-size: 11px; opacity: 0.7; margin: 15px 0 10px 0;">තාක්ෂණික කණ්ඩායම (GMU STUDIO):</p>
+
+            <p style="font-size: 12px; opacity: 0.7; margin: 30px 0 12px 0;">තාක්ෂණික කණ්ඩායම (GMU STUDIO):</p>
             <a href="https://wa.me/94763861339" class="contact-pill" style="border-color: var(--accent);">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WA">
                 <span>+94 76 386 1339 (WhatsApp)</span>
@@ -159,27 +174,48 @@
 
     <div id="page-donate" class="hidden">
         <div class="section-card centered-content">
-            <h2 class="section-title" style="font-size: 18px; margin-bottom: 15px;">පිංකමට දායක වන්න</h2>
+            <h2 class="section-title" style="font-size: 20px; margin-bottom: 20px;">පිංකමට දායක වන්න</h2>
+            <p style="line-height: 1.7; font-size: 14px; opacity: 0.8; margin-bottom: 20px;">
+                මෙම "ධර්ම නේත්‍රා" යෙදුම හරහා උතුම් වූ සද්ධර්මය දසත පැතිරවීමට ඔබ ලබා දෙන සහයෝගය අති මහත් වූ කුසල් රැස් කර දෙන "ධර්ම දානයකි". ධර්ම ප්‍රචාරක සේවාවන් අඛණ්ඩව පවත්වාගෙන යාමට ඔබගේ සහාය අප ඉතා අගය කරන්නෙමු.
+            </p>
+            
             <div class="bank-box">
-                <h3 style="margin-top: 0; color: var(--primary); font-size: 15px;">🏛️ බැංකු ගිණුම් විස්තර</h3>
-                <div style="line-height: 1.6; font-size: 14px; font-weight: 600;">
-                    BOC (ලංකා බැංකුව)<br>Kiriella (කිරිඇල්ල)<br>
-                    අංකය: <span style="font-size: 18px; color: var(--primary); font-weight: 800;">89862879</span><br>
-                    හිමිකරු: A Udara Sandaruwan
+                <h3 style="margin-top: 0; color: var(--primary); font-size: 17px; display: flex; align-items: center; justify-content: center;"><span style="margin-right: 10px;">🏛️</span> බැංකු ගිණුම් විස්තර</h3>
+                <div style="line-height: 1.8; font-size: 15px; font-weight: 600; text-align: center; display: inline-block;">
+                    බැංකුව: <b>Bank of Ceylon (BOC)</b><br>
+                    ශාඛාව: <b>Kiriella Branch (කිරිඇල්ල)</b><br>
+                    අංකය: <span style="font-size: 22px; color: var(--primary); font-weight: 800;">89862879</span><br>
+                    හිමිකරු: <b>A Udara Sandaruwan</b>
                 </div>
             </div>
-            <button class="btn btn-wa" style="width: 100%; padding: 12px; font-size: 13px;" onclick="window.open('https://wa.me/94763861339?text=Donation Receipt')">💬 රිසිට්පත එවන්න (076 386 1339)</button>
+
+            <p style="font-size: 12px; opacity: 0.7; margin-bottom: 15px;">පින්කමට අදාළ රිසිට්පත පහත WhatsApp අංකය වෙත යොමු කරන්න:</p>
+            <button class="btn btn-wa" style="width: 100%; padding: 18px; font-size: 15px; display: flex; align-items: center; justify-content: center;" onclick="window.open('https://wa.me/94763861339?text=Donation Receipt')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="22" style="margin-right: 10px;">
+                රිසිට්පත එවන්න (076 386 1339)
+            </button>
         </div>
     </div>
     
     <div id="page-merit" class="hidden">
-        <div class="section-card" style="text-align: left; padding: 18px;">
-            <h2 class="title" style="justify-content: center; font-size: 18px;">📖 පිං පොත</h2>
-            <input type="date" id="merit-date"><textarea id="merit-text" rows="3" placeholder="කළ පින්කම මෙහි ලියන්න..."></textarea>
-            <button class="btn" style="width:100%; font-size: 14px;" onclick="addMerit()">සටහන් කරන්න</button>
+        <div class="section-card" style="text-align: left; padding: 20px;">
+            <h2 class="title" style="justify-content: center; font-size: 20px;">📖 පිං පොත</h2>
+            <input type="date" id="merit-date"><textarea id="merit-text" rows="3" placeholder="කළ පින්කම මෙහි සටහන් කරන්න..."></textarea>
+            <button class="btn" style="width:100%; font-size: 16px;" onclick="addMerit()">පිං පොතේ සටහන් කරන්න</button>
         </div>
-        <div id="merit-list" style="margin-top: 10px;"></div>
+        <div id="merit-list" style="margin-top: 15px;"></div>
     </div>
+
+    <div id="page-meditation" class="hidden">
+         <div class="section-card">
+            <h2 class="title" style="justify-content: center; font-size: 20px;">🧘 භාවනා කාල ගණකය</h2>
+            <div id="timer-display" style="font-size: 70px; color: var(--primary); margin: 35px 0; font-weight: 700; font-family: monospace;">10:00</div>
+            <button class="btn" style="padding: 15px 50px; font-size: 18px;" onclick="startTimer()">ආරම්භය</button>
+            <br><br>
+            <button class="btn btn-dark" onclick="resetTimer()">නැවත සකසන්න</button>
+        </div>
+    </div>
+
 </div>
 
 <div class="bottom-nav">
@@ -189,6 +225,7 @@
     <div class="nav-item" onclick="showPage('page-contact', this)"><span class="nav-icon">📞</span>සම්බන්ධ</div>
     <div class="nav-item" onclick="showPage('page-donate', this)"><span class="nav-icon">🙏</span>ආධාර</div>
     <div class="nav-item" onclick="showPage('page-merit', this)"><span class="nav-icon">📖</span>පිං පොත</div>
+    <div class="nav-item" onclick="showPage('page-meditation', this)"><span class="nav-icon">🧘</span>භාවනා</div>
 </div>
 
 <audio id="bell" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
@@ -196,12 +233,12 @@
 <script>
     const firebaseConfig = { apiKey: "AIzaSyDEiwhtAIdoqdMIV5n_bdDoKuIrCkjqr3M", authDomain: "dharma-nethra.firebaseapp.com", projectId: "dharma-nethra", storageBucket: "dharma-nethra.firebasestorage.app", messagingSenderId: "365410669829", appId: "1:365410669829:web:d9a9465ed1f1f2b792936c" };
     firebase.initializeApp(firebaseConfig); const db = firebase.firestore();
-    let articles = []; let curIdx = 0; let favs = JSON.parse(localStorage.getItem('f')) || []; let reads = JSON.parse(localStorage.getItem('r')) || []; let merits = JSON.parse(localStorage.getItem('m')) || []; let fs = 16;
+    let articles = []; let curIdx = 0; let favs = JSON.parse(localStorage.getItem('f')) || []; let reads = JSON.parse(localStorage.getItem('r')) || []; let merits = JSON.parse(localStorage.getItem('m')) || []; let fs = 17;
     function tick() { const n = new Date(); document.getElementById('clock').innerText = n.toLocaleTimeString('si-LK'); document.getElementById('date').innerText = n.toLocaleDateString('si-LK', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }); } setInterval(tick, 1000);
     async function load() { const s = await db.collection("articles").get(); articles = s.docs.map(doc => doc.data()); render(articles); }
-    function render(data) { const list = document.getElementById('article-list'); list.innerHTML = data.map((a, i) => `<div class="article-card" onclick="openArt(${i})">${reads.includes(a.id)?'<span class="read-tag">කියවන ලදී</span>':''}<div class="title">${a.title}</div><p class="snippet">${a.snippet}</p><div style="margin-top:8px; display:flex; justify-content:space-between; align-items:center;"><span style="font-size:10px; font-weight:700; color:var(--primary); opacity:0.8;">කියවන්න තට්ටු කරන්න</span><span style="font-size:18px; cursor:pointer;" onclick="event.stopPropagation(); toggleFav('${a.id}')">${favs.includes(a.id)?'💖':'❤️'}</span></div></div>`).join(''); }
+    function render(data) { const list = document.getElementById('article-list'); list.innerHTML = data.map((a, i) => `<div class="article-card" onclick="openArt(${i})">${reads.includes(a.id)?'<span class="read-tag">කියවන ලදී</span>':''}<div class="title">${a.title}</div><p class="snippet">${a.snippet}</p><div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center;"><span style="font-size:10px; font-weight:700; color:var(--primary); opacity:0.8;">කියවන්න තට්ටු කරන්න</span><span style="font-size:20px; cursor:pointer;" onclick="event.stopPropagation(); toggleFav('${a.id}')">${favs.includes(a.id)?'💖':'❤️'}</span></div></div>`).join(''); }
     function openArt(i) { curIdx = i; const a = articles[i]; if(!reads.includes(a.id)){reads.push(a.id);localStorage.setItem('r',JSON.stringify(reads));} showPage('page-reader'); document.getElementById('view-title').innerText = a.title; document.getElementById('view-content').innerText = a.content; stopArt(); }
-    function showPage(id, el) { const ps = ['page-home', 'page-reader', 'page-about', 'page-contact', 'page-donate', 'page-merit']; ps.forEach(p => document.getElementById(p).classList.add('hidden')); const h = document.getElementById('app-header'); if (id==='page-home'||id==='page-fav') h.classList.remove('hidden'); else h.classList.add('hidden'); if(el){document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));el.classList.add('active');} if(id==='page-fav'){document.getElementById('page-home').classList.remove('hidden');render(articles.filter(x=>favs.includes(x.id)));} else {document.getElementById(id).classList.remove('hidden');if(id==='page-home')render(articles);if(id==='page-merit')drawMerits();} window.scrollTo(0,0); stopArt(); }
+    function showPage(id, el) { const ps = ['page-home', 'page-reader', 'page-about', 'page-contact', 'page-donate', 'page-merit', 'page-meditation']; ps.forEach(p => document.getElementById(p).classList.add('hidden')); const h = document.getElementById('app-header'); if (id==='page-home'||id==='page-fav') h.classList.remove('hidden'); else h.classList.add('hidden'); if(el){document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));el.classList.add('active');} if(id==='page-fav'){document.getElementById('page-home').classList.remove('hidden');render(articles.filter(x=>favs.includes(x.id)));} else {document.getElementById(id).classList.remove('hidden');if(id==='page-home')render(articles);if(id==='page-merit')drawMerits();} window.scrollTo(0,0); stopArt(); }
     function contactWA() { window.open(`https://wa.me/94778803779?text=${encodeURIComponent(`ගෞරවනීය ස්වාමින් වහන්ස, '${articles[curIdx].title}' ලිපිය පිළිබඳවයි:\n\n`)}`); }
     function contactMail() { window.location.href = `mailto:anhettigamapodihamuduruwo@gmail.com?subject=ධර්ම නේත්‍රා විමසීම&body=${encodeURIComponent(`ගෞරවනීය ස්වාමින් වහන්ස, '${articles[curIdx].title}' ලිපිය පිළිබඳවයි:\n\n`)}`; }
     function toggleDarkMode(){document.body.classList.toggle('dark-mode');} function changeSize(v){fs+=v;document.getElementById('view-content').style.fontSize=fs+'px';}
@@ -211,6 +248,7 @@
     function addMerit(){const d=document.getElementById('merit-date').value;const t=document.getElementById('merit-text').value;if(d&&t){merits.unshift({d,t,id:Date.now()});localStorage.setItem('m',JSON.stringify(merits));drawMerits();document.getElementById('merit-text').value="";}}
     function drawMerits(){document.getElementById('merit-list').innerHTML=merits.map(m=>`<div class="article-card" style="border-left:5px solid var(--secondary);"><div style="font-weight:700;color:var(--primary);">${m.d}</div><p style="margin:5px 0;">${m.t}</p><span style="position:absolute;right:15px;top:10px;cursor:pointer;color:var(--danger);" onclick="delMerit(${m.id})">🗑️</span></div>`).join('');}
     function delMerit(id){merits=merits.filter(x=>x.id!==id);localStorage.setItem('m',JSON.stringify(merits));drawMerits();}
+    let t_int; function startTimer(){let s=600;clearInterval(t_int);t_int=setInterval(()=>{s--;let m=Math.floor(s/60),sec=s%60;document.getElementById('timer-display').innerText=`${m}:${sec<10?'0'+sec:sec}`;if(s<=0){clearInterval(t_int);document.getElementById('bell').play();alert("භාවනා කාලය අවසන්!");}},1000);} function resetTimer(){clearInterval(t_int);document.getElementById('timer-display').innerText="10:00";}
     window.onload=()=>{tick();load();document.getElementById('merit-date').valueAsDate=new Date();};
 </script>
 </body>

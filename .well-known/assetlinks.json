@@ -3,6 +3,6 @@
   "target": {
     "namespace": "android_app",
     "package_name": "io.github.dharma_nethra.twa",
-    "sha256_cert_fingerprints": ["*"]
+    "sha256_cert_fingerprints": ["E1:E7:E6:9A:99:54:B9:58:63:7F:40:2B:FF:3B:2A:77:13:1F:B8:B0:1D:0B:BF:4C:1B:A7:75:AD:AE:2C:7E:90"]
   }
 }]

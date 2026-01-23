@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ධර්ම නේත්‍රා - Admin Panel</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #fffbf2; padding: 20px; }
+        .admin-box { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(211, 84, 0, 0.1); border-top: 8px solid #d35400; }
+        h2 { color: #d35400; text-align: center; margin-bottom: 25px; }
+        input, textarea { width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 12px; border: 1px solid #ddd; box-sizing: border-box; font-size: 16px; }
+        textarea { height: 350px; line-height: 1.6; }
+        .btn-upload { background: #d35400; color: white; border: none; padding: 18px; width: 100%; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 18px; transition: 0.3s; }
+        .btn-upload:hover { background: #e67e22; }
+        #status-msg { text-align: center; font-weight: bold; margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+    <div class="admin-box">
+        <h2>✍️ නව සදහම් ලිපියක් එක් කරන්න</h2>
+        <input type="text" id="article-title" placeholder="ලිපියේ මාතෘකාව මෙතැන ලියන්න...">
+        <textarea id="article-content" placeholder="සම්පූර්ණ ලිපිය මෙතැනට පේස්ට් (Paste) කරන්න..."></textarea>
+        <button class="btn-upload" onclick="uploadToFirebase()">ඇප් එකට ඇතුළත් කරන්න (Upload)</button>
+        <p id="status-msg"></p>
+    </div>
+
+    <script>
+        // ඔබ වහන්සේ ලබාදුන් සැබෑ Firebase දත්ත
+        const firebaseConfig = {
+            apiKey: "AIzaSyDEiwhtAIdoqdMIV5n_bdDoKuIrCkjqr3M",
+            authDomain: "dharma-nethra.firebaseapp.com",
+            databaseURL: "https://dharma-nethra-default-rtdb.firebaseio.com",
+            projectId: "dharma-nethra",
+            storageBucket: "dharma-nethra.firebasestorage.app",
+            messagingSenderId: "365410669829",
+            appId: "1:365410669829:web:d9a9465ed1f1f2b792936c"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        function uploadToFirebase() {
+            const title = document.getElementById('article-title').value;
+            const content = document.getElementById('article-content').value;
+            const status = document.getElementById('status-msg');
+
+            if (title && content) {
+                // දත්ත පද්ධතියේ 'articles' නෝඩ් එකට යැවීම
+                db.ref('articles').push({
+                    title: title,
+                    content: content,
+                    timestamp: Date.now()
+                }).then(() => {
+                    status.style.color = "green";
+                    status.innerText = "✅ ලිපිය සාර්ථකව ඇප් එකට ඇතුළත් කළා!";
+                    document.getElementById('article-title').value = "";
+                    document.getElementById('article-content').value = "";
+                }).catch((error) => {
+                    status.style.color = "red";
+                    status.innerText = "❌ දෝෂයක් ඇති වුණා: " + error.message;
+                });
+            } else {
+                alert("කරුණාකර මාතෘකාව සහ අන්තර්ගතය යන දෙකම සම්පූර්ණ කරන්න.");
+            }
+        }
+    </script>
+</body>
+</html>

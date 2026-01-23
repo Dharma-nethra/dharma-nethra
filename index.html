@@ -26,6 +26,33 @@
             --header-bg: linear-gradient(135deg, #2c3e50, #000000);
         }
 
+/* සෙවුම් කොටුවේ පෙනුම */
+.search-container {
+    background: var(--card-bg);
+    margin: 10px 0 20px 0;
+    padding: 10px 15px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    border: 1px solid #eee;
+}
+
+.search-container .material-icons-round {
+    color: var(--inactive-color);
+}
+
+#searchInput {
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 100%;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
         /* ආරක්‍ෂාව (Security) - Copy, Screenshot වැලැක්වීම */
         * {
             -webkit-user-select: none;
@@ -198,6 +225,12 @@
     </div>
 
     <div id="view-home" class="view-section active-view">
+
+<div class="search-container">
+    <span class="material-icons-round">search</span>
+    <input type="text" id="searchInput" onkeyup="filterArticles()" placeholder="ලිපි සොයන්න...">
+</div>
+
         <div id="article-list">
             <p style="text-align:center; opacity:0.5; margin-top:50px;">සදහම් ලිපි පූරණය වෙමින් පවතී...</p>
         </div>
@@ -387,6 +420,23 @@
         document.getElementById('timer-val').innerText = "00:00:00";
         document.getElementById('timer-btn').innerText = "අරඹන්න";
     }
+
+// ලිපි සෙවීමේ ක්‍රියාවලිය
+function filterArticles() {
+    let input = document.getElementById('searchInput').value.toLowerCase();
+    let cards = document.getElementById('list').getElementsByClassName('card');
+
+    for (let i = 0; i < cards.length; i++) {
+        let title = cards[i].getElementsByTagName('h3')[0].innerText.toLowerCase();
+        let content = cards[i].getElementsByTagName('p')[0].innerText.toLowerCase();
+        
+        if (title.includes(input) || content.includes(input)) {
+            cards[i].style.display = "";
+        } else {
+            cards[i].style.display = "none";
+        }
+    }
+}
 
         // Article Loading
         db.ref('articles').on('value', (snap) => {

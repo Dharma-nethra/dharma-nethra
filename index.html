@@ -40,7 +40,7 @@
 }
 
 .search-container .material-icons-round {
-    color: var(--inactive-color);
+    color: #888;
 }
 
 #searchInput {
@@ -122,9 +122,9 @@
             border-left: 6px solid var(--p-color);
             position: relative;
         }
-        .card h3 { color: var(--p-color); margin: 0 0 8px; font-size: 17px; line-height: 1.4; padding-right: 30px; }
+        .card h3 { color: var(--p-color); margin: 0 0 8px; font-size: 17px; line-height: 1.4; padding-right: 40px; }
         .card p { color: var(--text-main); opacity: 0.8; font-size: 14px; line-height: 1.5; margin: 0; }
-        .heart-icon { position: absolute; right: 15px; top: 18px; font-size: 20px; color: #ddd; cursor: pointer; }
+        .heart-icon { position: absolute; right: 15px; top: 18px; font-size: 24px; color: #ddd; cursor: pointer; transition: 0.3s; }
         .heart-icon.fav-on { color: #e74c3c; }
         .read-status { font-size: 9px; background: #27ae60; color: white; padding: 2px 7px; border-radius: 10px; margin-left: 8px; font-weight: bold; vertical-align: middle; }
 
@@ -371,7 +371,7 @@
 
         // App States
         let favs = JSON.parse(localStorage.getItem('myFavs') || '[]');
-        let readList = JSON.parse(localStorage.getItem('myReads') || '[]'); // කියවන ලද ලැයිස්තුව
+        let readList = JSON.parse(localStorage.getItem('myReads') || '[]');
         let timerActive = false;
         let timeCount = 0;
         let timerPtr;
@@ -445,11 +445,12 @@
                     const id = child.key;
                     allArticleIds.push(id); 
 
-                    // කියවන ලදී සලකුණ පරීක්ෂා කිරීම
+                    const favClass = favs.includes(id) ? 'fav-on' : '';
                     const readBadge = readList.includes(id) ? '<span class="read-status">කියවන ලදී</span>' : '';
 
                     list.innerHTML += `
                         <div class="card" onclick="openFull('${id}')" style="margin-bottom:15px; cursor:pointer;">
+                            <span class="material-icons-round heart-icon ${favClass}" onclick="doFav('${id}', event)">favorite</span>
                             <h3>${a.title} ${readBadge}</h3>
                             <p style="font-size:14px; opacity:0.8;">${a.content.substring(0, 100)}...</p>
                         </div>
@@ -482,7 +483,6 @@
                 document.getElementById('wa-inquiry').href = `https://wa.me/94778803779?text=ගෞරවනීය ස්වාමින් වහන්ස, '${a.title}' ලිපිය පිළිබඳවයි:`;
                 document.getElementById('mail-inquiry').href = `mailto:anhettigamapodihamuduruwo@gmail.com?subject=ලිපිය පිළිබඳ විමසීම&body=ගෞරවනීය ස්වාමින් වහන්ස, '${a.title}' ලිපිය පිළිබඳවයි:`;
 
-                // කියවන ලද ලැයිස්තුවට එක් කිරීම
                 if(!readList.includes(id)) {
                     readList.push(id);
                     localStorage.setItem('myReads', JSON.stringify(readList));
@@ -506,15 +506,17 @@
             document.getElementById('detail-overlay').style.display = 'none'; 
             synth.cancel();
             document.getElementById('listen-btn').innerText = "🔊 ශ්‍රවණය";
-            // කියවන ලද සලකුණ දර්ශනය වීමට ලැයිස්තුව නැවත පූරණය කිරීම
             location.reload(); 
         }
 
         // Favorites
         function doFav(id, e) {
             if(e) e.stopPropagation();
-            if(favs.includes(id)) favs = favs.filter(i => i !== id);
-            else favs.push(id);
+            if(favs.includes(id)) {
+                favs = favs.filter(i => i !== id);
+            } else {
+                favs.push(id);
+            }
             localStorage.setItem('myFavs', JSON.stringify(favs));
             location.reload();
         }
@@ -526,7 +528,12 @@
             favs.forEach(id => {
                 db.ref('articles/' + id).once('value').then(s => {
                     const a = s.val();
-                    list.innerHTML += `<div class="card" onclick="openFull('${id}')"><h3>${a.title}</h3><p>${a.content.substring(0,100)}...</p></div>`;
+                    list.innerHTML += `
+                        <div class="card" onclick="openFull('${id}')">
+                            <span class="material-icons-round heart-icon fav-on" onclick="doFav('${id}', event)">favorite</span>
+                            <h3>${a.title}</h3>
+                            <p>${a.content.substring(0,100)}...</p>
+                        </div>`;
                 });
             });
         }

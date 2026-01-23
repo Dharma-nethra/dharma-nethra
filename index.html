@@ -6,47 +6,70 @@
     <title>ධර්ම නේත්‍රා</title>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    
     <style>
+        /* ඔබ වහන්සේගේ මූලික වර්ණ සහ හැඩතල (කිසිදු වෙනසක් කර නැත) */
         :root { --p-color: #d35400; --bg-color: #fffbf2; }
-        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-color); margin: 0; padding-bottom: 80px; }
-        .header { background: var(--p-color); color: white; padding: 15px; text-align: center; font-size: 20px; font-weight: bold; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .container { padding: 15px; }
-        .card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer; border-left: 5px solid var(--p-color); position: relative; }
-        .card h3 { margin: 0 0 8px; color: var(--p-color); font-size: 17px; line-height: 1.4; padding-right: 25px; }
-        .card p { margin: 0; color: #666; font-size: 14px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-        .card .badge { position: absolute; right: 10px; top: 10px; background: #27ae60; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-color); margin: 0; padding-bottom: 70px; }
         
-        /* Detail View Styles */
-        #detail-view { display: none; background: white; min-height: 100vh; position: fixed; top: 0; width: 100%; z-index: 2000; overflow-y: auto; padding: 20px; box-sizing: border-box; }
-        .back-btn { background: #34495e; color: white; border: none; padding: 10px 18px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; display: flex; align-items: center; }
-        .article-title { color: var(--p-color); font-size: 22px; margin-bottom: 15px; line-height: 1.4; }
-        .article-content { font-size: 18px; line-height: 1.8; color: #2c3e50; white-space: pre-wrap; margin-top: 20px; }
-        .share-container { display: flex; gap: 10px; margin: 20px 0; border-top: 1px solid #eee; padding-top: 20px; }
-        .share-btn { flex: 1; border: none; padding: 12px; border-radius: 25px; color: white; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .header { background: var(--p-color); color: white; padding: 12px; text-align: center; font-size: 18px; font-weight: bold; position: sticky; top: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; }
+        .header img { height: 30px; }
+        
+        .container { padding: 12px; }
+        
+        /* මුල් පිටුවේ ලිපි පෙන්වන කාඩ්පත් */
+        .card { background: white; border-radius: 15px; padding: 15px; margin-bottom: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer; border-left: 5px solid var(--p-color); position: relative; }
+        .card h3 { margin: 0 0 8px; color: var(--p-color); font-size: 16px; line-height: 1.4; padding-right: 25px; }
+        .card p { margin: 0; color: #666; font-size: 13px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .badge { position: absolute; right: 10px; top: 10px; background: #27ae60; color: white; font-size: 9px; padding: 2px 6px; border-radius: 10px; }
 
-        /* Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #eee; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
-        .nav-item { text-align: center; color: #888; font-size: 11px; text-decoration: none; }
-        .nav-item.active { color: var(--p-color); }
+        /* ලිපිය පෙන්වන පිටුව (Detail View) */
+        #detail-view { display: none; background: white; min-height: 100vh; position: fixed; top: 0; width: 100%; z-index: 2000; overflow-y: auto; padding: 20px; box-sizing: border-box; }
+        .btn-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .back-btn { background: #34495e; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
+        .font-controls { display: flex; gap: 5px; }
+        .font-btn { background: #f1f1f1; border: 1px solid #ddd; padding: 5px 10px; border-radius: 15px; font-size: 12px; }
+        
+        .article-title { color: var(--p-color); font-size: 20px; font-weight: bold; line-height: 1.4; margin: 15px 0; }
+        .article-content { font-size: 17px; line-height: 1.8; color: #333; white-space: pre-wrap; margin-top: 15px; }
+
+        /* පහළ මෙනුව */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 8px 0; border-top: 1px solid #eee; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 500; }
+        .nav-item { text-align: center; color: #888; font-size: 10px; text-decoration: none; }
+        .nav-item.active { color: var(--p-color); font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div id="home-view">
-        <div class="header">ධර්ම නේත්‍රා</div>
+        <div class="header">
+            <img src="icon.png" alt="Logo">
+            <span>මුල් පිටුව | ➕</span>
+            <div style="width:30px;"></div>
+        </div>
+        
         <div class="container" id="article-list">
-            <p style="text-align:center;">සදහම් ලිපි පූරණය වෙමින් පවතී...</p>
+            <p style="text-align:center; margin-top:50px;">සදහම් ලිපි පූරණය වෙමින් පවතී...</p>
         </div>
     </div>
 
     <div id="detail-view">
-        <button class="back-btn" onclick="showHome()">← ආපසු</button>
-        <h2 id="detail-title" class="article-title"></h2>
+        <div class="btn-row">
+            <button class="back-btn" onclick="showHome()">⬅ ආපසු</button>
+            <div class="font-controls">
+                <button class="font-btn">A+</button>
+                <button class="font-btn">A-</button>
+                <button class="font-btn" style="background:#9b59b6; color:white;">🔊 ශ්‍රවණය</button>
+            </div>
+        </div>
+
+        <div id="detail-title" class="article-title"></div>
+        <hr style="border: 0.5px solid #eee;">
         <div id="detail-content" class="article-content"></div>
-        
-        <div class="share-container">
-            <button class="share-btn" style="background:#25D366;">WhatsApp</button>
-            <button class="share-btn" style="background:#E1473D;">Email</button>
+
+        <div style="display:flex; gap:10px; margin-top:30px;">
+            <button style="flex:1; background:#25D366; color:white; border:none; padding:12px; border-radius:25px; font-weight:bold;">WhatsApp</button>
+            <button style="flex:1; background:#E1473D; color:white; border:none; padding:12px; border-radius:25px; font-weight:bold;">Email</button>
         </div>
     </div>
 
@@ -55,6 +78,7 @@
         <div class="nav-item">❤️<br>ප්‍රියතම</div>
         <div class="nav-item">ℹ️<br>අප ගැන</div>
         <div class="nav-item">🙏<br>ආධාර</div>
+        <div class="nav-item">🧘<br>භාවනා</div>
     </div>
 
     <script>
@@ -77,7 +101,6 @@
         db.ref('articles').on('value', (snapshot) => {
             const listDiv = document.getElementById('article-list');
             listDiv.innerHTML = '';
-            
             if (snapshot.exists()) {
                 snapshot.forEach((childSnapshot) => {
                     const article = childSnapshot.val();
@@ -86,8 +109,8 @@
                         <div class="card" onclick="openArticle('${id}')">
                             <span class="badge">කියවන ලදී</span>
                             <h3>${article.title}</h3>
-                            <p>${article.content.substring(0, 80)}...</p>
-                            <small style="color:var(--p-color); margin-top:10px; display:block;">කියවන්න තට්ටු කරන්න</small>
+                            <p>${article.content}</p>
+                            <small style="color:var(--p-color); margin-top:8px; display:block; font-weight:bold;">කියවන්න තට්ටු කරන්න ❤️</small>
                         </div>
                     `;
                 });
@@ -96,13 +119,16 @@
             }
         });
 
-        // ලිපියක් තේරූ විට එය පෙන්වන ආකාරය
+        // ලිපිය විවෘත කිරීමේ රහස (මෙම කොටස තමයි වැදගත්ම)
         function openArticle(id) {
             db.ref('articles/' + id).once('value').then((snapshot) => {
                 const article = snapshot.val();
                 if (article) {
+                    // දත්ත නිවැරදි තැන්වලට ඇතුළත් කිරීම
                     document.getElementById('detail-title').innerText = article.title;
                     document.getElementById('detail-content').innerText = article.content;
+                    
+                    // පෙනුම මාරු කිරීම
                     document.getElementById('home-view').style.display = 'none';
                     document.getElementById('detail-view').style.display = 'block';
                     window.scrollTo(0, 0);

@@ -149,18 +149,17 @@
         .c-label { background: #fff8f0; color: var(--p-color); font-weight: bold; width: 35%; }
 
         /* Bottom Nav */
-        /* පාවෙන බොත්තම් වැනි නවීන මෙනු තීරුව */
     .bottom-nav {
         position: fixed;
-        bottom: 15px; /* තිරයේ පතුලෙන් මදක් ඉහළට */
+        bottom: 15px;
         left: 10px;
         right: 10px;
         background: var(--card-bg);
         display: flex;
         justify-content: space-around;
         padding: 12px 5px;
-        border-radius: 22px; /* රවුම් බොත්තම් හැඩය */
-        box-shadow: 0 10px 30px rgba(0,0,0,0.15); /* පැහැදිලි සෙවනැල්ලක් */
+        border-radius: 22px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         z-index: 1500;
         border: 1px solid rgba(0,0,0,0.05);
     }
@@ -176,24 +175,21 @@
         align-items: center;
     }
 
-    /* Google Material Icons පෙනුම */
     .nav-item .material-icons-round {
         font-size: 26px;
         margin-bottom: 2px;
     }
 
-    /* අකුරු තද (Bold) කිරීම */
     .nav-item b {
         font-size: 10px;
-        font-weight: 800; /* ඉතා තද අකුරු */
+        font-weight: 800;
         letter-spacing: 0.3px;
         display: block;
     }
 
-    /* තෝරාගත් පිටුවේ වර්ණය සහ හැඩය */
     .nav-item.active {
         color: var(--p-color);
-        transform: translateY(-3px); /* මදක් ඉහළට එසවීම */
+        transform: translateY(-3px);
     }
 
         /* Ping Potha Form */
@@ -326,13 +322,13 @@
         <div style="display:flex; justify-content:space-between; margin-top:30px; margin-bottom:50px;">
             <button style="background:#7f8c8d; color:white; border:none; padding:10px 20px; border-radius:20px;" onclick="closeDetail()">මුල් පිටුවට</button>
             <div style="display:flex; gap:10px;">
-                <button style="background:var(--p-color); color:white; border:none; padding:10px 20px; border-radius:20px;">⬅ පෙර</button>
-                <button style="background:var(--p-color); color:white; border:none; padding:10px 20px; border-radius:20px;">මීළඟ ➡</button>
+                <button style="background:var(--p-color); color:white; border:none; padding:10px 20px; border-radius:20px;" onclick="changeArticle(-1)">⬅ පෙර</button>
+                <button style="background:var(--p-color); color:white; border:none; padding:10px 20px; border-radius:20px;" onclick="changeArticle(1)">මීළඟ ➡</button>
             </div>
         </div>
     </div>
 
-   <div class="bottom-nav">
+    <div class="bottom-nav">
     <div class="nav-item on" onclick="nav('home')">
         <span class="material-icons-round">home</span>
         <b>මුල</b>

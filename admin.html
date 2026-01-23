@@ -3,108 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ධර්ම නේත්‍රා - Admin Panel</title>
+    <title>Dharma Nethra - Admin</title>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #fffbf2; padding: 20px; color: #333; }
-        .admin-box { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-top: 8px solid #d35400; }
-        h2 { color: #d35400; text-align: center; }
-        input, textarea { width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 12px; border: 1px solid #ddd; box-sizing: border-box; font-size: 16px; }
-        textarea { height: 250px; }
-        .btn-upload { background: #d35400; color: white; border: none; padding: 15px; width: 100%; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 18px; }
-        
-        .article-list { margin-top: 40px; border-top: 2px solid #eee; padding-top: 20px; }
-        .article-item { background: #f9f9f9; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #eee; }
-        .article-info { flex: 1; }
-        .article-info b { color: #d35400; display: block; margin-bottom: 5px; }
-        .btn-delete { background: #e74c3c; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        #status-msg { text-align: center; font-weight: bold; margin-top: 15px; }
+        body { font-family: sans-serif; background: #fffbf2; padding: 20px; }
+        .container { max-width: 600px; margin: auto; background: #fff; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        input, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: #d35400; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .list-item { background: #f9f9f9; padding: 10px; margin-top: 10px; border-radius: 8px; display: flex; justify-content: space-between; border: 1px solid #eee; }
     </style>
 </head>
 <body>
 
-    <div class="admin-box">
-        <h2>✍️ නව ලිපියක් ඇතුළත් කරන්න</h2>
-        <input type="text" id="article-title" placeholder="ලිපියේ මාතෘකාව මෙතැන ලියන්න...">
-        <textarea id="article-content" placeholder="සම්පූර්ණ ලිපිය මෙතැනට පේස්ට් කරන්න..."></textarea>
-        <button class="btn-upload" onclick="uploadToFirebase()">ඇප් එකට ඇතුළත් කරන්න (Upload)</button>
-        <p id="status-msg"></p>
+<div class="container">
+    <h2 style="color:#d35400; text-align:center;">සදහම් ලිපි කළමනාකරණය</h2>
+    <input type="text" id="t" placeholder="මාතෘකාව...">
+    <textarea id="c" rows="8" placeholder="ලිපිය මෙතැනට පේස්ට් කරන්න..."></textarea>
+    <button onclick="save()">ඇප් එකට එක් කරන්න (Upload)</button>
+    <p id="msg" style="text-align:center; font-weight:bold;"></p>
 
-        <div class="article-list">
-            <h3>📚 දැනට ඇප් එකේ ඇති ලිපි</h3>
-            <div id="display-list">පූරණය වෙමින් පවතී...</div>
-        </div>
-    </div>
+    <hr>
+    <h3>📚 දැනට ඇති ලිපි ලැයිස්තුව</h3>
+    <div id="article-list">පූරණය වෙමින් පවතී...</div>
+</div>
 
-    <script>
-        // ඔබ වහන්සේගේ Firebase Config
-        const firebaseConfig = {
-            apiKey: "AIzaSyDEiwhtAIdoqdMIV5n_bdDoKuIrCkjqr3M",
-            authDomain: "dharma-nethra.firebaseapp.com",
-            databaseURL: "https://dharma-nethra-default-rtdb.firebaseio.com",
-            projectId: "dharma-nethra",
-            storageBucket: "dharma-nethra.firebasestorage.app",
-            messagingSenderId: "365410669829",
-            appId: "1:365410669829:web:d9a9465ed1f1f2b792936c"
-        };
+<script>
+    // ඔබ වහන්සේගේ නිවැරදි Firebase Config
+    const firebaseConfig = {
+        apiKey: "AIzaSyDEiwhtAIdoqdMIV5n_bdDoKuIrCkjqr3M",
+        authDomain: "dharma-nethra.firebaseapp.com",
+        databaseURL: "https://dharma-nethra-default-rtdb.firebaseio.com",
+        projectId: "dharma-nethra",
+        storageBucket: "dharma-nethra.firebasestorage.app",
+        messagingSenderId: "365410669829",
+        appId: "1:365410669829:web:d9a9465ed1f1f2b792936c"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
+    // ලිපිය සුරැකීම
+    function save() {
+        const title = document.getElementById('t').value;
+        const content = document.getElementById('c').value;
+        const msg = document.getElementById('msg');
 
-        // ලිපිය Upload කිරීම
-        function uploadToFirebase() {
-            const title = document.getElementById('article-title').value;
-            const content = document.getElementById('article-content').value;
-            const status = document.getElementById('status-msg');
+        if(title && content) {
+            db.ref('articles').push({
+                title: title,
+                content: content,
+                time: Date.now()
+            }).then(() => {
+                msg.style.color = "green";
+                msg.innerText = "✅ සාර්ථකව ඇතුළත් කළා!";
+                document.getElementById('t').value = "";
+                document.getElementById('c').value = "";
+            }).catch(err => {
+                msg.style.color = "red";
+                msg.innerText = "❌ දෝෂයක්: " + err.message;
+            });
+        } else { alert("කරුණාකර සියල්ල පුරවන්න."); }
+    }
 
-            if (title && content) {
-                db.ref('articles').push({
-                    title: title,
-                    content: content,
-                    timestamp: Date.now()
-                }).then(() => {
-                    status.style.color = "green";
-                    status.innerText = "✅ ලිපිය සාර්ථකව ඇතුළත් කළා!";
-                    document.getElementById('article-title').value = "";
-                    document.getElementById('article-content').value = "";
-                });
-            } else {
-                alert("කරුණාකර මාතෘකාව සහ අන්තර්ගතය ඇතුළත් කරන්න.");
-            }
+    // ලිපි ලැයිස්තුව පෙන්වීම
+    db.ref('articles').on('value', (snap) => {
+        const list = document.getElementById('article-list');
+        list.innerHTML = '';
+        if(snap.exists()) {
+            snap.forEach(child => {
+                const a = child.val();
+                list.innerHTML += `
+                    <div class="list-item">
+                        <span><b>${a.title}</b></span>
+                        <button onclick="del('${child.key}')" style="background:#e74c3c; color:white; border:none; padding:5px 10px; border-radius:5px;">මකන්න</button>
+                    </div>
+                `;
+            });
+        } else { list.innerHTML = "තවමත් ලිපි කිසිවක් නැත."; }
+    }, err => {
+        document.getElementById('article-list').innerText = "දෝෂයක්: " + err.message;
+    });
+
+    function del(id) {
+        if(confirm("මෙම ලිපිය මකා දැමීමට අවශ්‍යද?")) {
+            db.ref('articles/' + id).remove();
         }
+    }
+</script>
 
-        // ලිපි ලැයිස්තුව පෙන්වීම
-        db.ref('articles').on('value', (snapshot) => {
-            const listDiv = document.getElementById('display-list');
-            listDiv.innerHTML = '';
-            if (snapshot.exists()) {
-                snapshot.forEach((child) => {
-                    const data = child.val();
-                    const id = child.key;
-                    listDiv.innerHTML += `
-                        <div class="article-item">
-                            <div class="article-info">
-                                <b>${data.title}</b>
-                                <small>${data.content.substring(0, 50)}...</small>
-                            </div>
-                            <button class="btn-delete" onclick="deleteArticle('${id}')">මකා දමන්න</button>
-                        </div>
-                    `;
-                });
-            } else {
-                listDiv.innerHTML = 'තවමත් ලිපි ඇතුළත් කර නැත.';
-            }
-        });
-
-        // ලිපියක් මකා දැමීම
-        function deleteArticle(id) {
-            if (confirm("ඔබට විශ්වාසද මෙම ලිපිය මකා දැමීමට අවශ්‍ය බව?")) {
-                db.ref('articles/' + id).remove().then(() => {
-                    alert("ලිපිය සාර්ථකව මකා දැමුවා.");
-                });
-            }
-        }
-    </script>
 </body>
 </html>

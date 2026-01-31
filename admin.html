@@ -101,17 +101,23 @@
     }
 
     // සංස්කරණය කරන්න
-    function editArticle(id, title, content) {
-        editingArticleId = id;
-        document.getElementById('t').value = title;
-        document.getElementById('c').value = content;
-        document.getElementById('editMode').style.display = 'block';
-        document.getElementById('editTitle').innerText = title;
-        document.getElementById('saveBtn').innerText = '✏️ යාවත්කාලීන කරන්න (Update)';
-        document.getElementById('saveBtn').style.background = '#27ae60';
-        
-        // ඉහළට scroll කරන්න
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+    function editArticle(id) {
+        const articleRef = db.ref('articles/' + id);
+        articleRef.once('value').then((snapshot) => {
+            const article = snapshot.val();
+            if(article) {
+                editingArticleId = id;
+                document.getElementById('t').value = article.title;
+                document.getElementById('c').value = article.content;
+                document.getElementById('editMode').style.display = 'block';
+                document.getElementById('editTitle').innerText = article.title;
+                document.getElementById('saveBtn').innerText = '✏️ යාවත්කාලීන කරන්න (Update)';
+                document.getElementById('saveBtn').style.background = '#27ae60';
+                
+                // ඉහළට scroll කරන්න
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
     }
 
     // සංස්කරණය අවලංගු කරන්න
@@ -137,14 +143,12 @@
         if(snap.exists()) {
             snap.forEach(child => {
                 const a = child.val();
-                const titleEscaped = a.title.replace(/'/g, "\\'");
-                const contentEscaped = a.content.replace(/'/g, "\\'").replace(/\n/g, '\\n');
                 
                 list.innerHTML += `
                     <div class="list-item">
                         <div class="list-item-title">${a.title}</div>
                         <div class="list-item-buttons">
-                            <button onclick="editArticle('${child.key}', '${titleEscaped}', '${contentEscaped}')" class="btn-edit">✏️ සංස්කරණය</button>
+                            <button onclick="editArticle('${child.key}')" class="btn-edit">✏️ සංස්කරණය</button>
                             <button onclick="del('${child.key}')" class="btn-delete">🗑️ මකන්න</button>
                         </div>
                     </div>

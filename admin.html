@@ -11,16 +11,30 @@
         .container { max-width: 600px; margin: auto; background: #fff; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         input, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
         button { width: 100%; padding: 15px; background: #d35400; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        .list-item { background: #f9f9f9; padding: 10px; margin-top: 10px; border-radius: 8px; display: flex; justify-content: space-between; border: 1px solid #eee; }
+        .list-item { background: #f9f9f9; padding: 10px; margin-top: 10px; border-radius: 8px; border: 1px solid #eee; }
+        .list-item-title { font-weight: bold; margin-bottom: 8px; }
+        .list-item-buttons { display: flex; gap: 5px; }
+        .list-item-buttons button { width: auto; padding: 8px 15px; font-size: 14px; }
+        .btn-edit { background: #3498db; }
+        .btn-delete { background: #e74c3c; }
+        .btn-cancel { background: #95a5a6; }
+        #editMode { display: none; background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 2px solid #ffc107; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h2 style="color:#d35400; text-align:center;">සදහම් ලිපි කළමනාකරණය</h2>
+    
+    <!-- සංස්කරණ මාදිලිය දර්ශකය -->
+    <div id="editMode">
+        <strong>🔄 සංස්කරණ මාදිලිය:</strong> <span id="editTitle"></span>
+        <button onclick="cancelEdit()" class="btn-cancel" style="margin-top: 10px;">❌ සංස්කරණය අවලංගු කරන්න</button>
+    </div>
+
     <input type="text" id="t" placeholder="මාතෘකාව...">
     <textarea id="c" rows="8" placeholder="ලිපිය මෙතැනට පේස්ට් කරන්න..."></textarea>
-    <button onclick="save()">ඇප් එකට එක් කරන්න (Upload)</button>
+    <button id="saveBtn" onclick="save()">ඇප් එකට එක් කරන්න (Upload)</button>
     <p id="msg" style="text-align:center; font-weight:bold;"></p>
 
     <hr>
@@ -29,7 +43,7 @@
 </div>
 
 <script>
-    // ඔබ වහන්සේගේ නිවැරදි Firebase Config
+    // Firebase Config
     const firebaseConfig = {
         apiKey: "AIzaSyDEiwhtAIdoqdMIV5n_bdDoKuIrCkjqr3M",
         authDomain: "dharma-nethra.firebaseapp.com",
@@ -42,27 +56,78 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // ලිපිය සුරැකීම
+    // සංස්කරණය සඳහා වන global variable
+    let editingArticleId = null;
+
+    // ලිපිය සුරැකීම හෝ යාවත්කාලීන කරීම
     function save() {
         const title = document.getElementById('t').value;
         const content = document.getElementById('c').value;
         const msg = document.getElementById('msg');
 
         if(title && content) {
-            db.ref('articles').push({
-                title: title,
-                content: content,
-                time: Date.now()
-            }).then(() => {
-                msg.style.color = "green";
-                msg.innerText = "✅ සාර්ථකව ඇතුළත් කළා!";
-                document.getElementById('t').value = "";
-                document.getElementById('c').value = "";
-            }).catch(err => {
-                msg.style.color = "red";
-                msg.innerText = "❌ දෝෂයක්: " + err.message;
-            });
-        } else { alert("කරුණාකර සියල්ල පුරවන්න."); }
+            if(editingArticleId) {
+                // යාවත්කාලීන කරීම (Update)
+                db.ref('articles/' + editingArticleId).update({
+                    title: title,
+                    content: content,
+                    time: Date.now()
+                }).then(() => {
+                    msg.style.color = "green";
+                    msg.innerText = "✅ සාර්ථකව යාවත්කාලීන කළා!";
+                    clearForm();
+                }).catch(err => {
+                    msg.style.color = "red";
+                    msg.innerText = "❌ දෝෂයක්: " + err.message;
+                });
+            } else {
+                // නව ලිපියක් එකතු කරීම (Add New)
+                db.ref('articles').push({
+                    title: title,
+                    content: content,
+                    time: Date.now()
+                }).then(() => {
+                    msg.style.color = "green";
+                    msg.innerText = "✅ සාර්ථකව ඇතුළත් කළා!";
+                    clearForm();
+                }).catch(err => {
+                    msg.style.color = "red";
+                    msg.innerText = "❌ දෝෂයක්: " + err.message;
+                });
+            }
+        } else { 
+            alert("කරුණාකර සියල්ල පුරවන්න."); 
+        }
+    }
+
+    // සංස්කරණය කරන්න
+    function editArticle(id, title, content) {
+        editingArticleId = id;
+        document.getElementById('t').value = title;
+        document.getElementById('c').value = content;
+        document.getElementById('editMode').style.display = 'block';
+        document.getElementById('editTitle').innerText = title;
+        document.getElementById('saveBtn').innerText = '✏️ යාවත්කාලීන කරන්න (Update)';
+        document.getElementById('saveBtn').style.background = '#27ae60';
+        
+        // ඉහළට scroll කරන්න
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // සංස්කරණය අවලංගු කරන්න
+    function cancelEdit() {
+        clearForm();
+        document.getElementById('msg').innerText = '';
+    }
+
+    // ෆෝරම් එක clear කරන්න
+    function clearForm() {
+        editingArticleId = null;
+        document.getElementById('t').value = "";
+        document.getElementById('c').value = "";
+        document.getElementById('editMode').style.display = 'none';
+        document.getElementById('saveBtn').innerText = 'ඇප් එකට එක් කරන්න (Upload)';
+        document.getElementById('saveBtn').style.background = '#d35400';
     }
 
     // ලිපි ලැයිස්තුව පෙන්වීම
@@ -72,18 +137,27 @@
         if(snap.exists()) {
             snap.forEach(child => {
                 const a = child.val();
+                const titleEscaped = a.title.replace(/'/g, "\\'");
+                const contentEscaped = a.content.replace(/'/g, "\\'").replace(/\n/g, '\\n');
+                
                 list.innerHTML += `
                     <div class="list-item">
-                        <span><b>${a.title}</b></span>
-                        <button onclick="del('${child.key}')" style="background:#e74c3c; color:white; border:none; padding:5px 10px; border-radius:5px;">මකන්න</button>
+                        <div class="list-item-title">${a.title}</div>
+                        <div class="list-item-buttons">
+                            <button onclick="editArticle('${child.key}', '${titleEscaped}', '${contentEscaped}')" class="btn-edit">✏️ සංස්කරණය</button>
+                            <button onclick="del('${child.key}')" class="btn-delete">🗑️ මකන්න</button>
+                        </div>
                     </div>
                 `;
             });
-        } else { list.innerHTML = "තවමත් ලිපි කිසිවක් නැත."; }
+        } else { 
+            list.innerHTML = "තවමත් ලිපි කිසිවක් නැත."; 
+        }
     }, err => {
         document.getElementById('article-list').innerText = "දෝෂයක්: " + err.message;
     });
 
+    // මකා දැමීම
     function del(id) {
         if(confirm("මෙම ලිපිය මකා දැමීමට අවශ්‍යද?")) {
             db.ref('articles/' + id).remove();
